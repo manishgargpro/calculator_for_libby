@@ -18,15 +18,15 @@ class Calculator:
         self.item_values = [
             {
                 "item_name": "Bagel",
-                "item_price": 1
+                "item_price": 1.5
             },
             {
                 "item_name": "Coffee",
-                "item_price": 2
+                "item_price": 2.95
             },
             {
                 "item_name": "Sandwich",
-                "item_price": 3
+                "item_price": 3.78
             },
             {
                 "item_name": "Juice",
@@ -35,7 +35,7 @@ class Calculator:
         ]
 
         # Going tax rate
-        self.tax_rate = 10
+        self.tax_rate = 11
 
         # Checkbuttons
         for i, item in enumerate(self.item_values):
@@ -55,8 +55,10 @@ class Calculator:
 
     def toggle_item(self, item, i):
         try:
-            print(item["item_name"], item["item_price"])
-            if self.total.get() != "0":
+            if self.total.get() != "0.00":
+                if self.tax_button_bool.get():
+                    self.total.set(f'{float(self.total.get()) * (100/(100+self.tax_rate)):.2f}')
+                    self.tax_button_bool.set(False)
                 if self.vars_holder[i].get():
                     new_total = float(self.total.get()) + item["item_price"]
                 else:
@@ -70,16 +72,19 @@ class Calculator:
 
     def add_tax(self, tr):
         try:
-            print(self.tax_button_bool.get())
             amount = float(self.total.get())
             new_tax_amount = round(amount * ((100+tr)/100), 2)
             old_tax_amount = round(amount * (100/(100+tr)), 2)
             if self.tax_button_bool.get():
-                print(amount, (100+tr)/100, new_tax_amount)
-                self.total.set(f'{new_tax_amount:.2f}')
+                if new_tax_amount != 0:
+                    self.total.set(f'{new_tax_amount:.2f}')
+                else:
+                    self.tax_button_bool.set(False)
             else:
-                print(amount, (100-tr)/100, old_tax_amount)
-                self.total.set(f'{old_tax_amount:.2f}')
+                if old_tax_amount != 0:
+                    self.total.set(f'{old_tax_amount:.2f}')
+                else:
+                    self.tax_button_bool.set(False)
         except ValueError:
             print("ValueError: ", ValueError)
             self.total.set("0.00")
