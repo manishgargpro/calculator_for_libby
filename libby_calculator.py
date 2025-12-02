@@ -34,6 +34,9 @@ class Calculator:
             }
         ]
 
+        # Going tax rate
+        self.tax_rate = 10
+
         # Checkbuttons
         for i, item in enumerate(self.item_values):
             check_var = tk.BooleanVar()
@@ -43,7 +46,7 @@ class Calculator:
 
         # Add Tax Button
         self.tax_button_bool = tk.BooleanVar()
-        self.add_tax_button = ttk.Checkbutton(master, style="Toolbutton", text="Add Tax (10%)", variable=self.tax_button_bool, command=lambda: self.add_tax(0.10))
+        self.add_tax_button = ttk.Checkbutton(master, style="Toolbutton", text="Add Tax (10%)", variable=self.tax_button_bool, command=lambda: self.add_tax(self.tax_rate))
         self.add_tax_button.grid(row=2, column=0, columnspan=4, padx=10, pady=10)
 
         # Add Clear Button
@@ -65,17 +68,18 @@ class Calculator:
             print("ValueError: ", ValueError)
             self.total.set("0.00")
 
-    def add_tax(self, tax_rate):
+    def add_tax(self, tr):
         try:
             print(self.tax_button_bool.get())
             amount = float(self.total.get())
-            tax_amount = round(amount * tax_rate, 2)
+            new_tax_amount = round(amount * ((100+tr)/100), 2)
+            old_tax_amount = round(amount * (100/(100+tr)), 2)
             if self.tax_button_bool.get():
-                print(amount, tax_amount)
-                self.total.set(f'{amount + tax_amount:.2f}')
+                print(amount, (100+tr)/100, new_tax_amount)
+                self.total.set(f'{new_tax_amount:.2f}')
             else:
-                print(amount, tax_amount)
-                self.total.set(f'{amount - tax_amount:.2f}')
+                print(amount, (100-tr)/100, old_tax_amount)
+                self.total.set(f'{old_tax_amount:.2f}')
         except ValueError:
             print("ValueError: ", ValueError)
             self.total.set("0.00")
