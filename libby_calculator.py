@@ -12,33 +12,33 @@ class Calculator:
         self.label = tk.Label(master, textvariable=self.total, font=("Arial", 24))
         self.label.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
 
+        self.vars_holder = []
+
         # Editable Values (Top of the Code)
         self.item_values = [
             {
                 "item_name": "Bagel",
-                "item_price": 1,
-                "check_var": tk.BooleanVar()
+                "item_price": 1
             },
             {
                 "item_name": "Coffee",
-                "item_price": 2,
-                "check_var": tk.BooleanVar()
+                "item_price": 2
             },
             {
                 "item_name": "Sandwich",
-                "item_price": 3,
-                "check_var": tk.BooleanVar()
+                "item_price": 3
             },
             {
                 "item_name": "Juice",
-                "item_price": 4,
-                "check_var": tk.BooleanVar()
+                "item_price": 4
             }
         ]
 
         # Checkbuttons
         for i, item in enumerate(self.item_values):
-            self.check_button = ttk.Checkbutton(master, style="Toolbutton", text=item["item_name"], variable=item["check_var"], command=lambda item=item: self.toggle_item(item))
+            check_var = tk.BooleanVar()
+            self.vars_holder.append(check_var)
+            self.check_button = ttk.Checkbutton(master, style="Toolbutton", text=item["item_name"], variable=self.vars_holder[i], command=lambda item=item, i=i: self.toggle_item(item, i))
             self.check_button.grid(row=1, column=i, padx=5, pady=5)
 
         # Add Tax Button
@@ -47,14 +47,14 @@ class Calculator:
         self.add_tax_button.grid(row=2, column=0, columnspan=4, padx=10, pady=10)
 
         # Add Clear Button
-        self.add_clear_button = ttk.Button(master, style="Toolbutton", text="Clear", command=lambda: self.total.set("0.00"))
+        self.add_clear_button = ttk.Button(master, style="Toolbutton", text="Clear", command=lambda: self.clear_all())
         self.add_clear_button.grid(row=2, column=1, columnspan=4, padx=10, pady=10)
 
-    def toggle_item(self, item):
+    def toggle_item(self, item, i):
         try:
-            print(item["item_name"], item["item_price"], item["check_var"].get())
+            print(item["item_name"], item["item_price"])
             if self.total.get() != "0":
-                if item["check_var"].get():
+                if self.vars_holder[i].get():
                     new_total = float(self.total.get()) + item["item_price"]
                 else:
                     new_total = float(self.total.get()) - item["item_price"]
@@ -62,14 +62,14 @@ class Calculator:
             else:
                 self.total.set(f'{item["item_price"]:.2f}')
         except ValueError:
-            print("ValueError")
+            print("ValueError: ", ValueError)
             self.total.set("0.00")
 
     def add_tax(self, tax_rate):
         try:
             print(self.tax_button_bool.get())
             amount = float(self.total.get())
-            tax_amount = amount * tax_rate
+            tax_amount = round(amount * tax_rate, 2)
             if self.tax_button_bool.get():
                 print(amount, tax_amount)
                 self.total.set(f'{amount + tax_amount:.2f}')
@@ -77,8 +77,18 @@ class Calculator:
                 print(amount, tax_amount)
                 self.total.set(f'{amount - tax_amount:.2f}')
         except ValueError:
-            print("ValueError")
+            print("ValueError: ", ValueError)
             self.total.set("0.00")
+    
+    def clear_all(self):
+        try:
+            self.total.set("0.00")
+            self.tax_button_bool.set(False)
+            for vars in self.vars_holder:
+                vars.set(False)
+        except ValueError:
+            print("ValueError: ", ValueError)
+
 
 root = tk.Tk()
 calculator = Calculator(root)
