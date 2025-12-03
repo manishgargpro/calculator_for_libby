@@ -1,5 +1,0 @@
-create a python based UI calculator with the following parameters:
-- the buttons should be visible able to be toggled on and off as well as comprise of the following:
-    - several togglable check buttons with names like "Bagel" and "Coffee" that add to the total when toggled on and subtract from the total when toggled off
-    - one toggelable check button called "add tax" that adds a pre-specified and editable percent of the total to itself when toggled on and subtracts it when toggled off
-    - one "clear" button that sets the total value back to zero
