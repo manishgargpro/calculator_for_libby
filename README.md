@@ -1,3 +1,13 @@
+# Running Instructions
+* To run this, you need python, which can be downloaded [here](https://www.python.org/).
+  * After downloading python, download the python file in this repository and put it in a folder located somewhere easy to access on your computer.
+  * When you are ready to run this tool, open a command line by typing "cmd" into the windows search bar and click on the "Command Prompt" application.
+  * Into the command prompt type in the following:
+    ```
+    cd "C:\<full_path_to_where_you_put>\libby_calculator.py"
+    python libby_calculator.py
+    ```
+# Button Behaviors
 * All buttons except "Clear" can toggle on and off.
 * The item buttons are additive, toggling them will either add or subtract from the subtotal.
 * You can add more items to the <self.item_values> array on line 18 of the python code by following that bracket format.
