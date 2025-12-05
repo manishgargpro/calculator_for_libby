@@ -1,0 +1,23 @@
+mutli-category tier system
+  category of item (coffees, pastries, etc.)
+  name of item (latte, cappuccino, etc.)
+  modifier (sm/md/lg, milk type, syrup, etc.)
+    these should be toggles
+    subtotal list should include these modifiers (that you can also add/remove)
+    modifier values are additive only, item default is known to POS users
+  categories should lead to different pages of items
+  item buttons should open to modifiers
+quantity modifier
+change checkbuttons to just buttons
+all clicked items should be in a list that you can remove as necessary from
+  clear button can just clear from the list
+discount buttons (bring-your-own-mug  50 cent discount, etc.)
+25 cent button and 1 dollar button
+checkout button (may not be necessary right away)
+csv support
+  need a way to add new items and prices from the app itself
+  where will the csv file be kept?
+  look into backend solutions for mobile apps
+
+for now, just port what exists to be able to be on an android tablet
+  force app to be landscape orientation
