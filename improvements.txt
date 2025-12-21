@@ -35,3 +35,9 @@ buttons should be in grid, list will be left to right then down
 switch "reset" button and "total" to be on opposite sides of where they are
 add subtle lines between UI elements for cleaner look
 
+[Dec 21 2025]
+still to do:
+  "EXTRA" menu needs proper item instantiation
+  all items need proper prices
+  currently only one type of modifier window is available, custom modifier windows still to come
+
