@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.example.libby_calculator.ui.theme.Libby_calculatorTheme
 
 data class MenuItem(val name: String, val price: Double, val options: List<String> = emptyList())
+data class ActionButton(val text: String, val action: () -> Unit)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +64,7 @@ fun Libby_calculatorApp() {
 @Composable
 fun Greeting(modifier: Modifier = Modifier) {
     var showMainMenu by remember { mutableStateOf(true) }
+    var showExtraMenu by remember { mutableStateOf(false) }
     var showCoffeeMenu by remember { mutableStateOf(false) }
     var showBagelMenu by remember { mutableStateOf(false) }
     var showPastryMenu by remember { mutableStateOf(false) }
@@ -75,12 +77,72 @@ fun Greeting(modifier: Modifier = Modifier) {
     var buttonWidth by remember { mutableStateOf(130.dp) }
     var buttonTextFontSize by remember { mutableStateOf(30.sp) }
 
+    val itemButtonAction = { name: String, price: Double ->
+        itemTotal = price
+        itemName = name
+        showPh1Modal = true
+    }
+
+    // Main menu buttons
+    val buttonsRow1 = listOf(
+        ActionButton("PH1") { itemButtonAction("PH1", 10.00) },
+        ActionButton("PH2") { itemButtonAction("PH2", 5.00) },
+        ActionButton("PH3") { itemButtonAction("PH3", 20.00) }
+    )
+    // End main menu buttons
+
+    // Coffee menu buttons
+    val coffeeButtonsRow1 = listOf(
+        ActionButton("coffee large") { itemButtonAction("coffee large", 2.50) },
+        ActionButton("coffee medium") { itemButtonAction("coffee medium", 3.95) },
+        ActionButton("coffee small") { itemButtonAction("coffee small", 8.00) },
+    )
+    // End coffee menu buttons
+
+    // Bagel menu buttons
+    val bagelButtonsRow1 = listOf(
+        ActionButton("poppy seed") { itemButtonAction("poppy seed", 7.65) },
+        ActionButton("plain bagel") { itemButtonAction("plain bagel", 3.23) },
+        ActionButton("everything bagel") { itemButtonAction("everything bagel", 4.80) },
+    )
+    // End bagel menu buttons
+
+    // Pastry menu buttons
+    val pastryButtonsRow1 = listOf(
+        ActionButton("croissant") { itemButtonAction("croissant", 12.00) },
+        ActionButton("muffin") { itemButtonAction("muffin", 15.30) },
+        ActionButton("banana bread") { itemButtonAction("banana bread", 20.45) },
+    )
+    val pastryButtonsRow2 = listOf(
+        ActionButton("cake") { itemButtonAction("cake", 103.67) }
+    )
+    // End pastry menu buttons
+
+    // Extra menu buttons
+    val extraButtonsRow1 = listOf(
+        ActionButton("dash of syrup") {
+            val item = MenuItem("dash of syrup", 0.65)
+            total += item.price; addedItems.add(item)
+        },
+        ActionButton("hot water") {
+            val item = MenuItem("hot water", 0.50)
+            total += item.price; addedItems.add(item)
+        },
+        ActionButton("something else") {
+            val item = MenuItem("something else", 1.00)
+            total += item.price; addedItems.add(item)
+        },
+    )
+    // End extra menu buttons
+
+    // Modifier options
     val checkboxOptions = remember { listOf(
         "Option 1",
         "Option 2",
         "Option 3"
     ) }
     val checkedStates = remember { mutableStateListOf(false, false, false) }
+    // End modifier options
 
     Column(
         modifier = modifier
@@ -99,80 +161,31 @@ fun Greeting(modifier: Modifier = Modifier) {
                         .verticalScroll(rememberScrollState())
                 ) {
                     Row {
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "PH1",
-                                        10.00
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("PH1", fontSize = buttonTextFontSize)
+                        buttonsRow1.forEach { button ->
+                            Column(modifier = Modifier.padding(1.dp)) {
+                                Button(
+                                    onClick = button.action,
+                                    modifier = Modifier
+                                        .width(buttonWidth)
+                                        .aspectRatio(1.5f),
+                                    shape = RectangleShape
+                                ) {
+                                    Text(button.text, fontSize = buttonTextFontSize)
+                                }
                             }
                         }
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
                                 onClick = {
-                                    val item = MenuItem(
-                                        "PH2",
-                                        5.00
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
+                                    showMainMenu = false
+                                    showExtraMenu = !showExtraMenu
                                 },
                                 modifier = Modifier
                                     .width(buttonWidth)
                                     .aspectRatio(1.5f),
                                 shape = RectangleShape
                             ) {
-                                Text("PH2", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "PH3",
-                                        20.00
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("PH3", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "something",
-                                        15.00
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("something", fontSize = buttonTextFontSize)
+                                Text("extras", fontSize = buttonTextFontSize)
                             }
                         }
                     }
@@ -258,61 +271,17 @@ fun Greeting(modifier: Modifier = Modifier) {
                                 Text("<Back", fontSize = buttonTextFontSize)
                             }
                         }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "coffee_large",
-                                        2.50
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("large", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "coffee_medium",
-                                        3.95
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("medium", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "coffee_small",
-                                        8.0
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("small", fontSize = buttonTextFontSize)
+                        coffeeButtonsRow1.forEach { button ->
+                            Column(modifier = Modifier.padding(1.dp)) {
+                                Button(
+                                    onClick = button.action,
+                                    modifier = Modifier
+                                        .width(buttonWidth)
+                                        .aspectRatio(1.5f),
+                                    shape = RectangleShape
+                                ) {
+                                    Text(button.text, fontSize = buttonTextFontSize)
+                                }
                             }
                         }
                     }
@@ -335,61 +304,17 @@ fun Greeting(modifier: Modifier = Modifier) {
                                 Text("<Back", fontSize = buttonTextFontSize)
                             }
                         }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "poppyseed",
-                                        7.65
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("poppyseed", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "plain",
-                                        3.23
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1f),
-                                shape = RectangleShape
-                            ) {
-                                Text("plain", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "everything",
-                                        4.8
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("everything", fontSize = buttonTextFontSize)
+                        bagelButtonsRow1.forEach { button ->
+                            Column(modifier = Modifier.padding(1.dp)) {
+                                Button(
+                                    onClick = button.action,
+                                    modifier = Modifier
+                                        .width(buttonWidth)
+                                        .aspectRatio(1.5f),
+                                    shape = RectangleShape
+                                ) {
+                                    Text(button.text, fontSize = buttonTextFontSize)
+                                }
                             }
                         }
                     }
@@ -412,82 +337,65 @@ fun Greeting(modifier: Modifier = Modifier) {
                                 Text("<Back", fontSize = buttonTextFontSize)
                             }
                         }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "croissant",
-                                        12.0
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("croissant", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "muffin",
-                                        15.3
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("muffin", fontSize = buttonTextFontSize)
-                            }
-                        }
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    val item = MenuItem(
-                                        "banana bread",
-                                        20.45
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(1.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("banana bread", fontSize = buttonTextFontSize)
+                        pastryButtonsRow1.forEach { button ->
+                            Column(modifier = Modifier.padding(1.dp)) {
+                                Button(
+                                    onClick = button.action,
+                                    modifier = Modifier
+                                        .width(buttonWidth)
+                                        .aspectRatio(1.5f),
+                                    shape = RectangleShape
+                                ) {
+                                    Text(button.text, fontSize = buttonTextFontSize)
+                                }
                             }
                         }
                     }
                     Row {
+                        pastryButtonsRow2.forEach { button ->
+                            Column(modifier = Modifier.padding(1.dp)) {
+                                Button(
+                                    onClick = button.action,
+                                    modifier = Modifier
+                                        .width(buttonWidth)
+                                        .aspectRatio(1.5f),
+                                    shape = RectangleShape
+                                ) {
+                                    Text(button.text, fontSize = buttonTextFontSize)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (showExtraMenu) {
+                Column {
+                    Row {
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
                                 onClick = {
-                                    val item = MenuItem(
-                                        "cake",
-                                        103.67
-                                    )
-                                    itemTotal = item.price
-                                    itemName = item.name
-                                    showPh1Modal = true
+                                    showExtraMenu = !showExtraMenu
+                                    showMainMenu = true
                                 },
                                 modifier = Modifier
                                     .width(buttonWidth)
                                     .aspectRatio(1.5f),
                                 shape = RectangleShape
                             ) {
-                                Text("cake", fontSize = buttonTextFontSize)
+                                Text("<Back", fontSize = buttonTextFontSize)
+                            }
+                        }
+                        extraButtonsRow1.forEach { button ->
+                            Column(modifier = Modifier.padding(1.dp)) {
+                                Button(
+                                    onClick = button.action,
+                                    modifier = Modifier
+                                        .width(buttonWidth)
+                                        .aspectRatio(1.5f),
+                                    shape = RectangleShape
+                                ) {
+                                    Text(button.text, fontSize = buttonTextFontSize)
+                                }
                             }
                         }
                     }
@@ -538,7 +446,12 @@ fun Greeting(modifier: Modifier = Modifier) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("$itemName Modifiers")
-                        Button(onClick = { showPh1Modal = false }) {
+                        Button(onClick = {
+                            showPh1Modal = false
+                            for (i in checkedStates.indices) {
+                                checkedStates[i] = false
+                            }
+                        }) {
                             Text("X")
                         }
                     }
