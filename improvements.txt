@@ -35,9 +35,16 @@ buttons should be in grid, list will be left to right then down
 switch "reset" button and "total" to be on opposite sides of where they are
 add subtle lines between UI elements for cleaner look
 
-[Dec 21 2025]
+[Dec 20 2025]
 still to do:
   "EXTRA" menu needs proper item instantiation
   all items need proper prices
   currently only one type of modifier window is available, custom modifier windows still to come
 
+[Dec 21 2025]
+custom modifers (all should be achievable through boolean)
+  base coffee needs some extra modifiers
+grab and go (G&G) modifiers are their own items
+in document, double starred (**) items have different size modifiers
+SAMMI (sandwich), BB (bagel) and FCRO (croissant) have their own bespoke modifier lists, see document
+MUFF (muffin) all same price but need modifiers anyway (don't need this right away)

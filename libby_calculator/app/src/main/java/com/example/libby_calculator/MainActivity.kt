@@ -114,7 +114,7 @@ fun Greeting(modifier: Modifier = Modifier) {
     val buttonsRow4 = listOf(
         ActionButton("ESM", { itemButtonAction("ESM", 10.00) }, Color(0xFFF5A724)),
         ActionButton("ESP", { itemButtonAction("ESP", 5.00) }, Color(0xFFF5A724)),
-        ActionButton("KC", { itemButtonAction("KC", 20.00) }, Color(0xFFF5A724)),
+        ActionButton("HC", { itemButtonAction("KC", 20.00) }, Color(0xFFF5A724)),
         ActionButton("COLD", { itemButtonAction("COLD", 20.00) }, Color(0xFF6ABCB8))
     )
     val buttonsRow5 = listOf(
@@ -185,20 +185,15 @@ fun Greeting(modifier: Modifier = Modifier) {
 
     // Extra menu buttons
     val extraButtonsRow1 = listOf(
-        ActionButton("dash of syrup", { itemButtonAction2("dash of syrup", 0.65) }, Color(0xFF6ABCB8)),
-        ActionButton("hot water", { itemButtonAction2("hot water", 0.50) }, Color(0xFF6ABCB8)),
-        ActionButton("something else", { itemButtonAction2("something else", 1.00) }, Color(0xFF6ABCB8)),
+        ActionButton("$1.00", { itemButtonAction2("$1.00", 1.00) }, Color(0xFF6ABCB8)),
+        ActionButton("1P", { itemButtonAction2("1P", 0.25) }, Color(0xFF6ABCB8)),
     )
     // End extra menu buttons
 
     // Discount menu buttons
     val discountButtonsRow1 = listOf(
-        ActionButton("25 cents off", { itemButtonAction2("25 cents off", -0.25) }),
-        ActionButton("50 cents off", { itemButtonAction2("50 cents off", -0.50) }),
-        ActionButton("1 dollar off", { itemButtonAction2("1 dollar off", -1.00) })
-    )
-    val discountButtonsRow2 = listOf(
-        ActionButton("5 dollars off", { itemButtonAction2("5 dollars off", -5.00) })
+        ActionButton("-$0.50", { itemButtonAction2("-$0.50", -0.50) }),
+        ActionButton("-$5.00", { itemButtonAction2("-$5.00", -5.00) })
     )
     // End Discount menu buttons
 
@@ -228,7 +223,7 @@ fun Greeting(modifier: Modifier = Modifier) {
     ) {
         Row(
             modifier = Modifier
-                .weight(1f)
+                .weight(5f)
         ) {
             if (showMainMenu) {
                 Column(
@@ -236,22 +231,6 @@ fun Greeting(modifier: Modifier = Modifier) {
                         .weight(2f)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Row {
-                        Column(modifier = Modifier.padding(1.dp)) {
-                            Button(
-                                onClick = {
-                                    showMainMenu = false
-                                    showDiscountMenu = !showDiscountMenu
-                                },
-                                modifier = Modifier
-                                    .width(buttonWidth)
-                                    .aspectRatio(3.5f),
-                                shape = RectangleShape
-                            ) {
-                                Text("DISCOUNTS", fontSize = 15.sp, textDecoration = TextDecoration.Underline, softWrap = false)
-                            }
-                        }
-                    }
                     Row {
                         buttonsRow1.forEach { button ->
                             Column(modifier = Modifier.padding(1.dp)) {
@@ -417,7 +396,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             }
             else if (showBleMenu) {
-                Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Column (
+                    modifier = Modifier
+                        .weight(2f)
+                        .verticalScroll(rememberScrollState())
+                ) {
                     Row {
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
@@ -469,7 +452,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             }
             else if (showFooMenu) {
-                Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Column (
+                    modifier = Modifier
+                        .weight(2f)
+                        .verticalScroll(rememberScrollState())
+                ) {
                     Row {
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
@@ -551,7 +538,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             }
             else if (showMerMenu) {
-                Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Column (
+                    modifier = Modifier
+                        .weight(2f)
+                        .verticalScroll(rememberScrollState())
+                ) {
                     Row {
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
@@ -617,7 +608,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             }
             else if (showExtraMenu) {
-                Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Column (
+                    modifier = Modifier
+                        .weight(2f)
+                        .verticalScroll(rememberScrollState())
+                ) {
                     Row {
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
@@ -650,7 +645,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             }
             else if (showDiscountMenu) {
-                Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Column (
+                    modifier = Modifier
+                        .weight(2f)
+                        .verticalScroll(rememberScrollState())
+                ) {
                     Row {
                         Column(modifier = Modifier.padding(1.dp)) {
                             Button(
@@ -667,21 +666,6 @@ fun Greeting(modifier: Modifier = Modifier) {
                             }
                         }
                         discountButtonsRow1.forEach { button ->
-                            Column(modifier = Modifier.padding(1.dp)) {
-                                Button(
-                                    onClick = button.action,
-                                    modifier = Modifier
-                                        .width(buttonWidth)
-                                        .aspectRatio(1.5f),
-                                    shape = RectangleShape
-                                ) {
-                                    Text(button.text, fontSize = buttonTextFontSize)
-                                }
-                            }
-                        }
-                    }
-                    Row {
-                        discountButtonsRow2.forEach { button ->
                             Column(modifier = Modifier.padding(1.dp)) {
                                 Button(
                                     onClick = button.action,
@@ -823,21 +807,54 @@ fun Greeting(modifier: Modifier = Modifier) {
 
         HorizontalDivider()
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
+        Row (
+            modifier = Modifier.fillMaxWidth().weight(1f),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
-                onClick = { total = 0.00; addedItems.clear() },
-                modifier = Modifier
-                    .padding(10.dp)
-                    .width(buttonWidth)
-                    .aspectRatio(1.5f),
-                shape = RectangleShape) {
-                Text("Reset", fontSize = buttonTextFontSize)
+            Column(modifier = Modifier.weight(2f)) {
+                Row {
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = { total = 0.00; addedItems.clear() },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .width(buttonWidth)
+                                .aspectRatio(3f),
+                            shape = RectangleShape
+                        ) {
+                            Text("Reset", fontSize = buttonTextFontSize)
+                        }
+                    }
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = {
+                                showMainMenu = false
+                                showDiscountMenu = !showDiscountMenu
+                            },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .width(buttonWidth)
+                                .aspectRatio(3f),
+                            shape = RectangleShape
+                        ) {
+                            Text(
+                                "DISCOUNTS",
+                                fontSize = 15.sp,
+                                textDecoration = TextDecoration.Underline,
+                                softWrap = false
+                            )
+                        }
+                    }
+                }
             }
-
-            Text("Total: $${String.format("%.2f", total)}", modifier = Modifier.padding(10.dp), fontSize = 50.sp)
+            VerticalDivider()
+            Column (modifier = Modifier.weight(1f)) {
+                Text(
+                    "$${String.format("%.2f", total)}",
+                    modifier = Modifier.padding(10.dp),
+                    fontSize = 50.sp
+                )
+            }
         }
     }
 }
