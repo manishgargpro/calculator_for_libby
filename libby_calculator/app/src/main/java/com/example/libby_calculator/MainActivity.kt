@@ -105,9 +105,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "PH1",
                                         10.00
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -124,9 +124,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "PH2",
                                         5.00
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -143,9 +143,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "PH3",
                                         20.00
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -162,9 +162,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "something",
                                         15.00
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -225,9 +225,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "PH4",
                                         12.50
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -264,9 +264,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "coffee_large",
                                         2.50
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -283,9 +283,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "coffee_medium",
                                         3.95
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -302,9 +302,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "coffee_small",
                                         8.0
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -341,9 +341,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "poppyseed",
                                         7.65
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -360,9 +360,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "plain",
                                         3.23
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -379,9 +379,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "everything",
                                         4.8
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -418,9 +418,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "croissant",
                                         12.0
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -437,9 +437,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "muffin",
                                         15.3
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -456,9 +456,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "banana bread",
                                         20.45
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
@@ -477,9 +477,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     val item = MenuItem(
                                         "cake",
                                         103.67
-                                    );
-                                    itemTotal = item.price;
-                                    itemName = item.name;
+                                    )
+                                    itemTotal = item.price
+                                    itemName = item.name
                                     showPh1Modal = true
                                 },
                                 modifier = Modifier
