@@ -21,3 +21,17 @@ csv support
 
 for now, just port what exists to be able to be on an android tablet
   force app to be landscape orientation
+
+[Dec 19 2025]
+categorization is 3 tiers in: main category >> item >> modifiers
+  keep an item total somewhere (visible would be nice) that you can zero as necessary when added to the total
+"added items" area should be narrower and more to the right
+modifiers to added items should also populate underneath the original item
+buttons should be in grid, list will be left to right then down
+  buttons should also be rectangular for easier fitting into UI
+  main category buttons should be highlighted or not depending on which menu is open
+  (see video for full UI workflow, including modifiers)
+  also, see email for color palatte
+switch "reset" button and "total" to be on opposite sides of where they are
+add subtle lines between UI elements for cleaner look
+

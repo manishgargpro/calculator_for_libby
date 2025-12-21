@@ -4,20 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -27,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,6 +67,11 @@ fun Greeting(modifier: Modifier = Modifier) {
     var total by remember { mutableDoubleStateOf(0.00) }
     val addedItems = remember { mutableStateListOf<MenuItem>() }
 
+    var buttonWidth by remember { mutableStateOf(130.dp) }
+    var showPh1Modal by remember { mutableStateOf(false) }
+    val checkboxOptions = remember { listOf("Option 1", "Option 2", "Option 3") }
+    val checkedStates = remember { mutableStateListOf(false, false, false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -71,14 +82,20 @@ fun Greeting(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .horizontalScroll(rememberScrollState())
+                    .weight(2f)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Row {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        Button(onClick = { showCoffeeMenu = !showCoffeeMenu }) {
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = { showCoffeeMenu = !showCoffeeMenu },
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape
+                        ) {
                             Text("coffee", fontSize = 30.sp)
                         }
 
@@ -96,10 +113,13 @@ fun Greeting(modifier: Modifier = Modifier) {
                             }
                         }
                     }
-                }
-                Row {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        Button(onClick = { showBagelMenu = !showBagelMenu }) {
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = { showBagelMenu = !showBagelMenu },
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape) {
                             Text("bagel", fontSize = 30.sp)
                         }
 
@@ -117,10 +137,13 @@ fun Greeting(modifier: Modifier = Modifier) {
                             }
                         }
                     }
-                }
-                Row {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        Button(onClick = { showPastryMenu = !showPastryMenu }) {
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = { showPastryMenu = !showPastryMenu },
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape) {
                             Text("pastry", fontSize = 30.sp)
                         }
 
@@ -141,10 +164,68 @@ fun Greeting(modifier: Modifier = Modifier) {
                             }
                         }
                     }
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = {},
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape) {
+                            Text("something", fontSize = 30.sp)
+                        }
+                    }
+                }
+                Row {
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = { showPh1Modal = true },
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape
+                        ) {
+                            Text("PH1", fontSize = 30.sp)
+                        }
+                    }
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = {},
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape) {
+                            Text("PH2", fontSize = 30.sp)
+                        }
+                    }
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = {},
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape) {
+                            Text("PH3", fontSize = 30.sp)
+                        }
+                    }
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = {},
+                            modifier = Modifier
+                                .width(buttonWidth)
+                                .aspectRatio(1.5f),
+                            shape = RectangleShape) {
+                            Text("PH4", fontSize = 30.sp)
+                        }
+                    }
                 }
             }
+            VerticalDivider()
             // Added items list
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp)
+            ) {
                 Text("Added Items:", fontSize = 20.sp)
                 LazyColumn {
                     itemsIndexed(addedItems) { index, item ->
@@ -162,15 +243,48 @@ fun Greeting(modifier: Modifier = Modifier) {
             }
         }
 
+        if (showPh1Modal) {
+            AlertDialog(
+                onDismissRequest = { showPh1Modal = false },
+                title = { Text("PH1 Options") },
+                text = {
+                    Column {
+                        checkboxOptions.forEachIndexed { index, text ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Checkbox(
+                                    checked = checkedStates[index],
+                                    onCheckedChange = { checkedStates[index] = it }
+                                )
+                                Text(text)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = { showPh1Modal = false }) {
+                        Text("OK")
+                    }
+                }
+            )
+        }
+
+        HorizontalDivider()
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Total: $${String.format("%.2f", total)}", modifier = Modifier.padding(20.dp), fontSize = 50.sp)
-
-            Button(onClick = { total = 0.00; addedItems.clear() }, modifier = Modifier.padding(20.dp)) {
+            Button(
+                onClick = { total = 0.00; addedItems.clear() },
+                modifier = Modifier
+                    .padding(20.dp)
+                    .width(buttonWidth)
+                    .aspectRatio(1.5f),
+                shape = RectangleShape) {
                 Text("Reset", fontSize = 30.sp)
             }
+
+            Text("Total: $${String.format("%.2f", total)}", modifier = Modifier.padding(20.dp), fontSize = 50.sp)
         }
     }
 }
