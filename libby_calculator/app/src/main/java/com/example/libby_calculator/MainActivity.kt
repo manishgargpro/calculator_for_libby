@@ -86,6 +86,15 @@ fun Greeting(modifier: Modifier = Modifier) {
     var shortModifier by remember { mutableStateOf(false) }
     var nitroModifier by remember { mutableStateOf(false) }
     var shrimpModifier by remember { mutableStateOf(false) }
+    var grabNGoModifier by remember { mutableStateOf(false) }
+    var fancyCroissantModifier by remember { mutableStateOf(false) }
+    var sandwichModifier by remember { mutableStateOf(false) }
+    var oatmealModifier by remember { mutableStateOf(false) }
+    var houseTeaModifier by remember { mutableStateOf(false) }
+    var blackTeaModifier by remember { mutableStateOf(false) }
+    var herbalTeaModifier by remember { mutableStateOf(false) }
+    var greenTeaModifier by remember { mutableStateOf(false) }
+    var specTeaModifier by remember { mutableStateOf(false) }
     // End modifier booleans
 
     var itemTotal by remember { mutableDoubleStateOf(0.00) }
@@ -142,42 +151,42 @@ fun Greeting(modifier: Modifier = Modifier) {
 
     // BLE menu buttons
     val bleButtonsRow1 = listOf(
-        ActionButton("ESPB", { itemButtonAction("ESPB", 6.00) }, Color(0xFFB9710B)),
-        ActionButton("FLB", { itemButtonAction("FLB", 6.25) }, Color(0xFFB9710B)),
-        ActionButton("CRB", { itemButtonAction("CRB", 6.25) }, Color(0xFFB9710B)),
-        ActionButton("MB", { itemButtonAction("MB", 6.25) }, Color(0xFFB9710B))
+        ActionButton("ESPB", { itemButtonAction("ESPB", 6.00); baseModifier = true }, Color(0xFFB9710B)),
+        ActionButton("FLB", { itemButtonAction("FLB", 6.25); baseModifier = true }, Color(0xFFB9710B)),
+        ActionButton("CRB", { itemButtonAction("CRB", 6.25); baseModifier = true }, Color(0xFFB9710B)),
+        ActionButton("MB", { itemButtonAction("MB", 6.25); baseModifier = true }, Color(0xFFB9710B))
     )
     val bleButtonsRow2 = listOf(
-        ActionButton("TEA B", { itemButtonAction("TEA B", 6.25) }, Color(0xFF7DD675)),
-        ActionButton("CHAIB", { itemButtonAction("CHAIB", 6.25) }, Color(0xFF7DD675)),
-        ActionButton("SM", { itemButtonAction2("SM", 7.50) }, Color(0xFF6ABCB8)),
-        ActionButton("CRBL", { itemButtonAction("CRBL", 5.75) }, Color(0xFF48638A))
+        ActionButton("TEA B", { itemButtonAction("TEA B", 6.25); baseModifier = true }, Color(0xFF7DD675)),
+        ActionButton("CHAIB", { itemButtonAction("CHAIB", 6.25); baseModifier = true }, Color(0xFF7DD675)),
+        ActionButton("SM", { itemButtonAction2("SM", 7.50); baseModifier = true }, Color(0xFF6ABCB8)),
+        ActionButton("CRBL", { itemButtonAction("CRBL", 5.75); baseModifier = true }, Color(0xFF48638A))
     )
     // End BLE menu buttons
 
     // FOO menu buttons
     val fooButtonsRow1 = listOf(
-        ActionButton("MUFF", { itemButtonAction2("MUFF", 7.65) }, Color(0xFFF00B6A)),
-        ActionButton("FCRO", { itemButtonAction2("FCRO", 3.23) }, Color(0xFFF00B6A)),
-        ActionButton("PLAIN", { itemButtonAction2("PLAIN", 4.80) }, Color(0xFFF00B6A))
+        ActionButton("MUFF", { itemButtonAction2("MUFF", 5.25) }, Color(0xFFF00B6A)),
+        ActionButton("FCRO", { itemButtonAction("FCRO", 0.00); fancyCroissantModifier = true }, Color(0xFFF00B6A)),
+        ActionButton("PLAIN", { itemButtonAction2("PLAIN", 5.00) }, Color(0xFFF00B6A))
     )
     val fooButtonsRow2 = listOf(
         ActionButton("BARS", { itemButtonAction2("BARS", 7.65) }, Color(0xFFD62027)),
-        ActionButton("SCONE", { itemButtonAction2("SCONE", 3.23) }, Color(0xFFD62027)),
-        ActionButton("POP", { itemButtonAction2("POP", 4.80) }, Color(0xFFD62027)),
+        ActionButton("SCONE", { itemButtonAction2("SCONE", 5.25) }, Color(0xFFD62027)),
+        ActionButton("POP", { itemButtonAction2("POP", 5.75) }, Color(0xFFD62027)),
         ActionButton("COOKI", { itemButtonAction2("COOKI", 4.80) }, Color(0xFFD62027))
     )
     val fooButtonsRow3 = listOf(
-        ActionButton("LOAF", { itemButtonAction2("LOAF", 7.65) }, Color(0xFF91132F)),
-        ActionButton("PAR", { itemButtonAction2("PAR", 3.23) }, Color(0xFFF5A724)),
-        ActionButton("G&G", { itemButtonAction2("G&G", 4.80) }, Color(0xFFFB8125)),
+        ActionButton("LOAF", { itemButtonAction2("LOAF", 5.00) }, Color(0xFF91132F)),
+        ActionButton("PAR", { itemButtonAction2("PAR", 8.25) }, Color(0xFFF5A724)),
+        ActionButton("G&G", { itemButtonAction("G&G", 0.00); grabNGoModifier = true }, Color(0xFFFB8125)),
         ActionButton("BALLZ", { itemButtonAction2("BALLZ", 4.80) }, Color(0xFFBC1441))
     )
     val fooButtonsRow4 = listOf(
-        ActionButton("SAMMI", { itemButtonAction2("SAMMI", 7.65) }, Color(0xFF0F3D7F)),
+        ActionButton("SAMMI", { itemButtonAction("SAMMI", 0.00); sandwichModifier = true }, Color(0xFF0F3D7F)),
         ActionButton("BB", { itemButtonAction2("BB", 3.23) }, Color(0xFF24157A)),
         ActionButton("EMPAN", { itemButtonAction2("EMPAN", 4.80) }, Color(0xFF2BBDAB)),
-        ActionButton("OAT", { itemButtonAction2("OAT", 4.80) }, Color(0xFF2BBDAB))
+        ActionButton("OAT", { itemButtonAction("OAT", 6.50); oatmealModifier = true }, Color(0xFF2BBDAB))
     )
     // End FOO menu buttons
 
@@ -188,13 +197,13 @@ fun Greeting(modifier: Modifier = Modifier) {
     )
     val merButtonsRow2 = listOf(
         ActionButton("BULK", { itemButtonAction2("BULK", 20.45) }, Color(0xFF6F1C0D)),
-        ActionButton("BLKT", { itemButtonAction2("BLKT", 103.67) }, Color(0xFFA70B10)),
-        ActionButton("HRBT", { itemButtonAction2("HRBT", 20.45) }, Color(0xFF91132F)),
+        ActionButton("BLKT", { itemButtonAction("BLKT", 0.00); blackTeaModifier = true }, Color(0xFFA70B10)),
+        ActionButton("HRBT", { itemButtonAction("HRBT", 0.00); herbalTeaModifier = true }, Color(0xFF91132F)),
         ActionButton("HONEY", { itemButtonAction2("HONEY", 103.67) }, Color(0xFFF5A724))
     )
     val merButtonsRow3 = listOf(
-        ActionButton("SPTEA", { itemButtonAction2("SPTEA", 20.45) }, Color(0xFFBC1441)),
-        ActionButton("GRT", { itemButtonAction2("GRT", 103.67) }, Color(0xFF2AAD65))
+        ActionButton("SPTEA", { itemButtonAction("SPTEA", 0.00); specTeaModifier = true }, Color(0xFFBC1441)),
+        ActionButton("GRT", { itemButtonAction("GRT", 0.00); greenTeaModifier = true }, Color(0xFF2AAD65))
     )
     // End MER menu buttons
 
@@ -214,35 +223,35 @@ fun Greeting(modifier: Modifier = Modifier) {
 
     // Base modifier options
     val checkboxOptions = remember { listOf(
-        "Almond +1",
-        "Macadamia +1",
-        "Soy +1",
-        "Oat +1",
-        "Breve +1",
-        "Heavy Cream +2",
-        "Extra Milk +1",
-        "Espresso Shot +1",
-        "Syrup +1",
-        "Honey +1"
+        "Almond +1.00",
+        "Macadamia +1.00",
+        "Soy +1.00",
+        "Oat +1.00",
+        "Breve +1.00",
+        "Heavy Cream +2.00",
+        "Extra Milk +1.00",
+        "Espresso Shot +1.00",
+        "Syrup +1.00",
+        "Honey +1.00"
     ) }
     val checkedStates = remember { mutableStateListOf(false, false, false, false, false, false, false, false, false, false) }
     // End base modifier options
 
     // Coffee base modifier options
     val coffeeBaseCheckboxOptions = remember { listOf(
-        "Guppy +0",
-        "Trout +1",
-        "Whaley +2"
+        "Guppy +0.00",
+        "Trout +1.00",
+        "Whaley +2.00"
     ) }
-    val coffeeBaseCheckedStates = remember { mutableStateListOf(true, false, false) }
+    val coffeeBaseCheckedStates = remember { mutableStateListOf(false, false, false) }
     // End coffee base modifier options
 
     // Coffee short modifier options
     val coffeeShortCheckboxOptions = remember { listOf(
-        "Guppy +0",
-        "Trout +1"
+        "Guppy +0.00",
+        "Trout +1.00"
     ) }
-    val coffeeShortCheckedStates = remember { mutableStateListOf(true, false) }
+    val coffeeShortCheckedStates = remember { mutableStateListOf(false, false) }
     // End coffee short modifier options
 
     // Coffee extra modifier options
@@ -255,27 +264,149 @@ fun Greeting(modifier: Modifier = Modifier) {
         "Whaley Refill +2.75",
         "Slow Pour +4.50"
     ) }
-    val coffeeExtraCheckedStates = remember { mutableStateListOf(true, false, false, false, false, false, false) }
+    val coffeeExtraCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false) }
     // End coffee extra modifier options
 
     // Coffee nitro modifier options
     val coffeeNitroCheckboxOptions = remember { listOf(
-        "Guppy +0",
+        "Guppy +0.00",
         "Trout +1.25",
         "Whaley +2.50"
     ) }
-    val coffeeNitroCheckedStates = remember { mutableStateListOf(true, false, false) }
+    val coffeeNitroCheckedStates = remember { mutableStateListOf(false, false, false) }
     // End coffee nitro modifier options
 
     // Hot chocolate shrimp modifier options
     val hotChocolateShrimpCheckboxOptions = remember { listOf(
-        "Shrimp -1",
-        "Guppy +0",
-        "Trout +1",
-        "Whaley +2"
+        "Shrimp -1.00",
+        "Guppy +0.00",
+        "Trout +1.00",
+        "Whaley +2.00"
     ) }
     val hotChocolateShrimpCheckedStates = remember { mutableStateListOf(false, true, false, false) }
     // End hot chocolate shrimp modifier options
+
+    // Grab N Go modifier options
+    val grabNGoCheckboxOptions = remember { listOf(
+        "PH Water +3.25",
+        "Smart Water +5.00",
+        "Perrier +3.25",
+        "Topo-Chico +3.75",
+        "CNWater +3.75",
+        "OJ +3.50",
+        "Mama Chia +4.00",
+        "Better Booch +4.25",
+        "Synergy Booch +5.25",
+        "CBD +8.25",
+        "Yerba Mate +4.25",
+        "Cup H20 +1.00"
+    ) }
+    val grabNGoCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false, false, false, false, false, false) }
+    // End Grab N Go modifier options
+
+    // Fancy croissant modifier options
+    val fancyCroissantCheckboxOptions = remember { listOf(
+        "Chorizo +5.75",
+        "Jalapeno +5.75",
+        "Chocolate +5.75",
+        "Cheddar +5.75",
+        "Almond +5.75",
+        "Turkey +6.25",
+        "Ham & Cheese +6.25"
+        ) }
+    val fancyCroissantCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false) }
+    // End fancy croissant modifier options
+
+    // Sandwich modifier options
+    val sandwichCheckboxOptions = remember { listOf(
+        "Ham Sammie +13.25",
+        "Turk Sammie +13.25",
+        "Classico +14.25",
+        "Guac This Way +14.25",
+        "Millennial +14.25",
+        "Caff Caprese +14.25",
+        "Add Cheese Bagel +1.50",
+        "Add Fancy Croiss +2.75",
+    ) }
+    val sandwichCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false, false) }
+    // End sandwich modifier options
+
+    // Oatmeal modifier options
+    val oatmealCheckboxOptions = remember { listOf(
+        "Add ons +0.75",
+        "Fresh Berries +2.75"
+    ) }
+    val oatmealCheckedStates = remember { mutableStateListOf(false, false) }
+    // End oatmeal modifier options
+
+    // House tea modifier options
+    val houseTeaCheckboxOptions = remember { listOf(
+        "Kermint +4.25",
+        "Good Karma +5.50",
+        "Tea Rex +5.50",
+        "Frankie Goes to Hollywood +6.00",
+        "Virgin Chai +5.25",
+        "Aphroditea +5.25",
+        "Auntea Flow +5.25",
+        "To Breathe or Not to Breathe +5.75",
+        "Good Vibrations +5.75",
+        "Good Night Moon +6.00",
+        "Pug in a Rug +5.25",
+        "Custom Blend +6.00",
+        "Lady Grey +5.50"
+    ) }
+    val houseTeaCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false, false, false, false, false, false, false) }
+    // End house tea modifier options
+
+    // Black tea modifier options
+    val blackTeaCheckboxOptions = remember { listOf(
+        "Masala Chai +5.50",
+        "Earl Grey +5.00",
+        "English Breakfast +5.00",
+        "India Black +5.00",
+        "Irish Breakfast +5.00",
+        "Assam +5.00",
+        "Darjeeling +5.50",
+        "Lapang Souchong +5.00"
+    ) }
+    val blackTeaCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false, false) }
+    // End black tea modifier options
+
+    // Herbal tea modifier options
+    val herbalTeaCheckboxOptions = remember { listOf(
+        "Berry Patch +4.50",
+        "Chamomile +4.00",
+        "Lavender +5.50",
+        "Lemon Balm +3.50",
+        "Mango Flip +4.50",
+        "Rooibos +4.00",
+        "Stevia +4.00"
+    ) }
+    val herbalTeaCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false) }
+    // End herbal tea modifier options
+
+    // Green tea modifier options
+    val greenTeaCheckboxOptions = remember { listOf(
+        "Gen Mai Cha +5.00",
+        "Gunpowder +5.00",
+        "Jasmine +5.25",
+        "Moroccan Mint +4.75",
+        "Sencha +5.00",
+        "Vietnamese +5.25",
+        "Matcha +9.00",
+        ) }
+    val greenTeaCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false, false) }
+    // End green tea modifier options
+
+    // Special tea modifier options
+    val specTeaCheckboxOptions = remember { listOf(
+        "Yerba Matte +4.25",
+        "Kukicha Twig +4.00",
+        "Peach White +4.75"
+    ) }
+    val specTeaCheckedStates = remember { mutableStateListOf(false, false, false) }
+    // End special tea modifier options
+
 
     val turnOffAllCheckboxes = {
         showPh1Modal = false
@@ -284,6 +415,15 @@ fun Greeting(modifier: Modifier = Modifier) {
         shortModifier = false
         nitroModifier = false
         shrimpModifier = false
+        grabNGoModifier = false
+        fancyCroissantModifier = false
+        sandwichModifier = false
+        oatmealModifier = false
+        houseTeaModifier = false
+        blackTeaModifier = false
+        herbalTeaModifier = false
+        greenTeaModifier = false
+        specTeaModifier = false
     }
 
     Column(
@@ -795,7 +935,16 @@ fun Greeting(modifier: Modifier = Modifier) {
                 extraModifier,
                 nitroModifier,
                 shortModifier,
-                shrimpModifier
+                shrimpModifier,
+                grabNGoModifier,
+                fancyCroissantModifier,
+                sandwichModifier,
+                oatmealModifier,
+                houseTeaModifier,
+                blackTeaModifier,
+                herbalTeaModifier,
+                greenTeaModifier,
+                specTeaModifier
             ) {
                 finalCheckboxList.clear()
                 finalCheckedStates.clear()
@@ -820,6 +969,42 @@ fun Greeting(modifier: Modifier = Modifier) {
                         finalCheckboxList.addAll(hotChocolateShrimpCheckboxOptions + checkboxOptions)
                         finalCheckedStates.addAll(hotChocolateShrimpCheckedStates + checkedStates)
                     }
+                    grabNGoModifier -> {
+                        finalCheckboxList.addAll(grabNGoCheckboxOptions)
+                        finalCheckedStates.addAll(grabNGoCheckedStates)
+                    }
+                    fancyCroissantModifier -> {
+                        finalCheckboxList.addAll(fancyCroissantCheckboxOptions)
+                        finalCheckedStates.addAll(fancyCroissantCheckedStates)
+                    }
+                    sandwichModifier -> {
+                        finalCheckboxList.addAll(sandwichCheckboxOptions)
+                        finalCheckedStates.addAll(sandwichCheckedStates)
+                    }
+                    oatmealModifier -> {
+                        finalCheckboxList.addAll(oatmealCheckboxOptions)
+                        finalCheckedStates.addAll(oatmealCheckedStates)
+                    }
+                    houseTeaModifier -> {
+                        finalCheckboxList.addAll(houseTeaCheckboxOptions)
+                        finalCheckedStates.addAll(houseTeaCheckedStates)
+                    }
+                    blackTeaModifier -> {
+                        finalCheckboxList.addAll(blackTeaCheckboxOptions)
+                        finalCheckedStates.addAll(blackTeaCheckedStates)
+                    }
+                    herbalTeaModifier -> {
+                        finalCheckboxList.addAll(herbalTeaCheckboxOptions)
+                        finalCheckedStates.addAll(herbalTeaCheckedStates)
+                    }
+                    greenTeaModifier -> {
+                        finalCheckboxList.addAll(greenTeaCheckboxOptions)
+                        finalCheckedStates.addAll(greenTeaCheckedStates)
+                    }
+                    specTeaModifier -> {
+                        finalCheckboxList.addAll(specTeaCheckboxOptions)
+                        finalCheckedStates.addAll(specTeaCheckedStates)
+                    }
                 }
             }
             AlertDialog(
@@ -830,7 +1015,7 @@ fun Greeting(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("$itemName Modifiers")
+                        Text("$itemName ${ if (itemTotal != 0.00) " ($${String.format("%.2f", itemTotal)})" else "" } Modifiers")
                         Button(onClick = turnOffAllCheckboxes) {
                             Text("X")
                         }
@@ -885,13 +1070,13 @@ fun Greeting(modifier: Modifier = Modifier) {
 //                            val numberString = refillOption.substringAfterLast(" ")
 //                            ph1Price = numberString.toDoubleOrNull() ?: itemTotal // Set price from refill, or default
 //                        } else {
-                            selectedOptions.forEach { option ->
-                                val operatorIndex = option.lastIndexOfAny(charArrayOf('+', '-'))
-                                if (operatorIndex != -1) {
-                                    val numberString = option.substring(operatorIndex).trim()
-                                    ph1Price += numberString.toDoubleOrNull() ?: 0.0
-                                }
+                        selectedOptions.forEach { option ->
+                            val operatorIndex = option.lastIndexOfAny(charArrayOf('+', '-'))
+                            if (operatorIndex != -1) {
+                                val numberString = option.substring(operatorIndex).trim()
+                                ph1Price += numberString.toDoubleOrNull() ?: 0.0
                             }
+                        }
 //                        }
                         val ph1Item = MenuItem(name = itemName, price = ph1Price, options = selectedOptions)
                         addedItems.add(ph1Item)

@@ -48,3 +48,16 @@ grab and go (G&G) modifiers are their own items
 in document, double starred (**) items have different size modifiers
 SAMMI (sandwich), BB (bagel) and FCRO (croissant) have their own bespoke modifier lists, see document
 MUFF (muffin) all same price but need modifiers anyway (don't need this right away)
+
+[Dec 31 2025]
+ask libby about prices for:
+WELL
+COLD (not CB)
+Bagel
+BALLZ
+BB
+EMPAN
+T SHI
+MUG
+BULK
+HONEY
