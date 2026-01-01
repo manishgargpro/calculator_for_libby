@@ -53,9 +53,9 @@ MUFF (muffin) all same price but need modifiers anyway (don't need this right aw
 ask libby about prices for:
 WELL
 COLD (not CB)
-Bagel
+Bagel ([Jan 1 2026]: this is BB)
 BALLZ
-BB
+BB ([Jan 1 2026]: added prices)
 EMPAN
 T SHI
 MUG
