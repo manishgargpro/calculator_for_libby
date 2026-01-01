@@ -1,5 +1,7 @@
 package com.example.libby_calculator
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -65,6 +67,7 @@ fun Libby_calculatorApp() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Greeting(modifier: Modifier = Modifier) {
     // Menu booleans
@@ -107,7 +110,7 @@ fun Greeting(modifier: Modifier = Modifier) {
 
     // Main menu buttons
     val buttonsRow1 = listOf(
-        ActionButton("COFFE", { itemButtonAction("COFFEE", 3.50); extraModifier = true }, Color(0xFF0F5FB7)),
+        ActionButton("COFFE", { itemButtonAction("COFFEE", 0.00); extraModifier = true }, Color(0xFF0F5FB7)),
         ActionButton("OLE", { itemButtonAction("OLE", 4.00); baseModifier = true }, Color(0xFF0F5FB7)),
         ActionButton("CB", { itemButtonAction("CB", 5.00); nitroModifier = true }, Color(0xFF0F5FB7))
     )
@@ -227,46 +230,51 @@ fun Greeting(modifier: Modifier = Modifier) {
 
     // Coffee base modifier options
     val coffeeBaseCheckboxOptions = remember { listOf(
+        "Guppy +0",
         "Trout +1",
         "Whaley +2"
     ) }
-    val coffeeBaseCheckedStates = remember { mutableStateListOf(false, false) }
+    val coffeeBaseCheckedStates = remember { mutableStateListOf(true, false, false) }
     // End coffee base modifier options
 
     // Coffee short modifier options
     val coffeeShortCheckboxOptions = remember { listOf(
+        "Guppy +0",
         "Trout +1"
     ) }
-    val coffeeShortCheckedStates = remember { mutableStateListOf(false) }
+    val coffeeShortCheckedStates = remember { mutableStateListOf(true, false) }
     // End coffee short modifier options
 
     // Coffee extra modifier options
     val coffeeExtraCheckboxOptions = remember { listOf(
-        "Trout +1",
-        "Whaley +2",
-        "Guppy Refill 1.75",
-        "Trout Refill 2.25",
-        "Whaley Refill 2.75",
-        "Slow Pour +1"
+        "Guppy +3.50",
+        "Trout +4.50",
+        "Whaley +5.50",
+        "Guppy Refill +1.75",
+        "Trout Refill +2.25",
+        "Whaley Refill +2.75",
+        "Slow Pour +4.50"
     ) }
-    val coffeeExtraCheckedStates = remember { mutableStateListOf(false, false, false, false, false, false) }
+    val coffeeExtraCheckedStates = remember { mutableStateListOf(true, false, false, false, false, false, false) }
     // End coffee extra modifier options
 
     // Coffee nitro modifier options
     val coffeeNitroCheckboxOptions = remember { listOf(
+        "Guppy +0",
         "Trout +1.25",
         "Whaley +2.50"
     ) }
-    val coffeeNitroCheckedStates = remember { mutableStateListOf(false, false) }
+    val coffeeNitroCheckedStates = remember { mutableStateListOf(true, false, false) }
     // End coffee nitro modifier options
 
     // Hot chocolate shrimp modifier options
     val hotChocolateShrimpCheckboxOptions = remember { listOf(
         "Shrimp -1",
+        "Guppy +0",
         "Trout +1",
         "Whaley +2"
     ) }
-    val hotChocolateShrimpCheckedStates = remember { mutableStateListOf(false, false, false) }
+    val hotChocolateShrimpCheckedStates = remember { mutableStateListOf(false, true, false, false) }
     // End hot chocolate shrimp modifier options
 
     val turnOffAllCheckboxes = {
@@ -276,24 +284,6 @@ fun Greeting(modifier: Modifier = Modifier) {
         shortModifier = false
         nitroModifier = false
         shrimpModifier = false
-        for (i in checkedStates.indices) {
-            checkedStates[i] = false
-        }
-        for (i in coffeeBaseCheckedStates.indices) {
-            coffeeBaseCheckedStates[i] = false
-        }
-        for (i in coffeeExtraCheckedStates.indices) {
-            coffeeExtraCheckedStates[i] = false
-        }
-        for (i in coffeeShortCheckedStates.indices) {
-            coffeeShortCheckedStates[i] = false
-        }
-        for (i in coffeeNitroCheckedStates.indices) {
-            coffeeNitroCheckedStates[i] = false
-        }
-        for (i in hotChocolateShrimpCheckedStates.indices) {
-            hotChocolateShrimpCheckedStates[i] = false
-        }
     }
 
     Column(
@@ -849,13 +839,13 @@ fun Greeting(modifier: Modifier = Modifier) {
                 text = {
                     Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
                         if (finalCheckboxList.isNotEmpty() && finalCheckboxList.size == finalCheckedStates.size) {
-                            val anyBasePriceOptionSelected = finalCheckboxList.indices.any { index ->
-                                !finalCheckboxList[index].contains("+") && finalCheckedStates[index]
+                            val anyRefillOptionSelected = finalCheckboxList.indices.any { index ->
+                                finalCheckboxList[index].contains("Refill") && finalCheckedStates[index]
                             }
                             finalCheckboxList.forEachIndexed { index, text ->
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    val isEnabled = if (anyBasePriceOptionSelected) {
-                                        !text.contains("+")
+                                    val isEnabled = if (anyRefillOptionSelected) {
+                                        text.contains("Refill")
                                     } else {
                                         true
                                     }
@@ -863,9 +853,9 @@ fun Greeting(modifier: Modifier = Modifier) {
                                         checked = finalCheckedStates[index],
                                         onCheckedChange = { isChecked ->
                                             finalCheckedStates[index] = isChecked
-                                            if (isChecked && !text.contains("+")) {
+                                            if (isChecked && text.contains("Refill")) {
                                                 finalCheckedStates.indices.forEach { otherIndex ->
-                                                    if (finalCheckboxList[otherIndex].contains("+")) {
+                                                    if (!finalCheckboxList[otherIndex].contains("Refill")) {
                                                         finalCheckedStates[otherIndex] = false
                                                     }
                                                 }
@@ -875,7 +865,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     )
                                     Text(
                                         text = text,
-                                        color = if (isEnabled) Color.Unspecified else Color.Gray
+                                        color = when {
+                                            text.contains("Refill") -> Color.Blue
+                                            isEnabled -> Color.Unspecified
+                                            else -> Color.Gray
+                                        }
                                     )
                                 }
                             }
@@ -886,11 +880,11 @@ fun Greeting(modifier: Modifier = Modifier) {
                     Button(onClick = {
                         val selectedOptions = finalCheckboxList.filterIndexed { index, _ -> finalCheckedStates[index] }
                         var ph1Price = itemTotal
-                        val refillOption = selectedOptions.firstOrNull { it.contains("Refill") }
-                        if (refillOption != null) {
-                            val numberString = refillOption.substringAfterLast(" ")
-                            ph1Price = numberString.toDoubleOrNull() ?: itemTotal // Set price from refill, or default
-                        } else {
+//                        val refillOption = selectedOptions.firstOrNull { it.contains("Refill") }
+//                        if (refillOption != null) {
+//                            val numberString = refillOption.substringAfterLast(" ")
+//                            ph1Price = numberString.toDoubleOrNull() ?: itemTotal // Set price from refill, or default
+//                        } else {
                             selectedOptions.forEach { option ->
                                 val operatorIndex = option.lastIndexOfAny(charArrayOf('+', '-'))
                                 if (operatorIndex != -1) {
@@ -898,7 +892,7 @@ fun Greeting(modifier: Modifier = Modifier) {
                                     ph1Price += numberString.toDoubleOrNull() ?: 0.0
                                 }
                             }
-                        }
+//                        }
                         val ph1Item = MenuItem(name = itemName, price = ph1Price, options = selectedOptions)
                         addedItems.add(ph1Item)
                         total += ph1Item.price
