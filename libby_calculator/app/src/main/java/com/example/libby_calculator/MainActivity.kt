@@ -23,6 +23,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import kotlinx.coroutines.delay
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -77,8 +83,12 @@ fun Greeting(modifier: Modifier = Modifier) {
     var showBleMenu by remember { mutableStateOf(false) }
     var showFooMenu by remember { mutableStateOf(false) }
     var showMerMenu by remember { mutableStateOf(false) }
-    var showPh1Modal by remember { mutableStateOf(false) }
     // End menu booleans
+
+    // Modal booleans
+    var showPh1Modal by remember { mutableStateOf(false) }
+    var showMiscModal by remember { mutableStateOf(false) }
+    // End modal booleans
 
     // Modifier booleans
     var baseModifier by remember { mutableStateOf(false) }
@@ -102,6 +112,8 @@ fun Greeting(modifier: Modifier = Modifier) {
     var total by remember { mutableDoubleStateOf(0.00) }
     val addedItems = remember { mutableStateListOf<MenuItem>() }
     var itemName by remember { mutableStateOf("") }
+    var miscTotal by remember { mutableStateOf("") }
+    var miscError by remember { mutableStateOf(false) }
 
     var buttonWidth by remember { mutableStateOf(130.dp) }
     var buttonTextFontSize by remember { mutableStateOf(25.sp) }
@@ -1121,6 +1133,68 @@ fun Greeting(modifier: Modifier = Modifier) {
                 }
             )
         }
+        if (showMiscModal) {
+            val focusRequester = remember { FocusRequester() }
+            AlertDialog(
+                onDismissRequest = {
+                    showMiscModal = false
+                    miscTotal = ""
+                    miscError = false
+                },
+                title = { Text("Misc") },
+                text = {
+                    OutlinedTextField(
+                        value = miscTotal,
+                        onValueChange = { newValue ->
+                            if (newValue.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                                miscTotal = newValue
+                            }
+                            if (miscError) miscError = false
+                        },
+                        label = { Text("Custom dollar amount") },
+//                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = miscError,
+                        supportingText = {
+                            if (miscError) {
+                                Text("Invalid input")
+                            }
+                        },
+                        modifier = Modifier.focusRequester(focusRequester)
+                    )
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        val amountToAdd = miscTotal.toDoubleOrNull()
+                        if (amountToAdd != null && amountToAdd > 0) {
+                            total += amountToAdd
+                            val customItem = MenuItem(name = "Misc", price = amountToAdd)
+                            addedItems.add(customItem)
+                            showMiscModal = false
+                            miscTotal = ""
+                            miscError = false
+                        } else {
+                            miscError = true
+                        }
+                    }) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = {
+                        showMiscModal = false
+                        miscTotal = ""
+                        miscError = false
+                    }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+            LaunchedEffect(Unit) {
+                delay(100)
+                focusRequester.requestFocus()
+            }
+        }
 
         HorizontalDivider()
 
@@ -1167,6 +1241,19 @@ fun Greeting(modifier: Modifier = Modifier) {
                                 textDecoration = TextDecoration.Underline,
                                 softWrap = false
                             )
+                        }
+                    }
+                    // MISC BUTTON
+                    Column(modifier = Modifier.padding(1.dp)) {
+                        Button(
+                            onClick = { showMiscModal = true },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .width(buttonWidth)
+                                .aspectRatio(3f),
+                            shape = RectangleShape
+                        ) {
+                            Text("MISC", fontSize = buttonTextFontSize)
                         }
                     }
                 }
