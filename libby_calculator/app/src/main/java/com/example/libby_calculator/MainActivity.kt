@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.libby_calculator.ui.theme.Libby_calculatorTheme
 import kotlinx.coroutines.delay
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,17 +112,17 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                 when (currentMenu) {
                     MenuState.MAIN -> {
                         MenuRow(MenuData.mainRow1, buttonWidth, buttonTextFontSize, ::onActionClick) {
-                            MenuButton("EXTRA", Color(0xFF6ABCB8), true) { currentMenu = MenuState.EXTRA }
+                            MenuButton("EXTRA", modifier = Modifier, color = Color(0xFF6ABCB8), isUnderlined = true) { currentMenu = MenuState.EXTRA }
                         }
                         MenuRow(MenuData.mainRow2, buttonWidth, buttonTextFontSize, ::onActionClick)
                         MenuRow(MenuData.mainRow3, buttonWidth, buttonTextFontSize, ::onActionClick)
                         MenuRow(MenuData.mainRow4, buttonWidth, buttonTextFontSize, ::onActionClick)
                         MenuRow(MenuData.mainRow5, buttonWidth, buttonTextFontSize, ::onActionClick)
                         Row {
-                            MenuButton("BLE", Color(0xFF2BBDAB), true) { currentMenu = MenuState.BLE }
-                            MenuButton("FOO", Color(0xFFF00B6A), true) { currentMenu = MenuState.FOO }
-                            MenuButton("MER", Color(0xFF24157A), true) { currentMenu = MenuState.MER }
-                            MenuButton("ITAL", Color(0xFF419EBF)) {
+                            MenuButton("BLE", modifier = Modifier, color = Color(0xFF2BBDAB), isUnderlined = true) { currentMenu = MenuState.BLE }
+                            MenuButton("FOO", modifier = Modifier, color = Color(0xFFF00B6A), isUnderlined = true) { currentMenu = MenuState.FOO }
+                            MenuButton("MER", modifier = Modifier, color = Color(0xFF24157A), isUnderlined = true) { currentMenu = MenuState.MER }
+                            MenuButton("ITAL", modifier = Modifier, color = Color(0xFF419EBF)) {
                                 onActionClick(ActionButton("ITAL", 12.50, ModifierType.BASE))
                             }
                         }
@@ -164,7 +165,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                     itemsIndexed(addedItems) { index, item ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Column(modifier = Modifier.weight(1f)) {
-                                Text("${item.name} - $${String.format("%.2f", item.price)}", fontSize = 20.sp)
+                                Text("${item.name} - $${String.format(Locale.US, "%.2f", item.price)}", fontSize = 20.sp)
                                 item.options.forEach { option ->
                                     Text("  - $option", fontSize = 15.sp)
                                 }
@@ -223,7 +224,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                 }
             }
             VerticalDivider()
-            Text("$${String.format("%.2f", total)}", modifier = Modifier.padding(10.dp).weight(1f), fontSize = 50.sp)
+            Text("$${String.format(Locale.US, "%.2f", total)}", modifier = Modifier.padding(10.dp).weight(1f), fontSize = 50.sp)
         }
     }
 }
@@ -238,7 +239,7 @@ fun MenuRow(
 ) {
     Row {
         buttons.forEach { button ->
-            MenuButton(button.text, button.color, button.isUnderlined, width, 1.5f, fontSize) {
+            MenuButton(button.text, modifier = Modifier, color = button.color, isUnderlined = button.isUnderlined, width = width, aspectRatio = 1.5f, fontSize = fontSize) {
                 onClick(button)
             }
         }
@@ -249,12 +250,12 @@ fun MenuRow(
 @Composable
 fun MenuButton(
     text: String,
+    modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     isUnderlined: Boolean = false,
     width: androidx.compose.ui.unit.Dp = 130.dp,
     aspectRatio: Float = 1.5f,
     fontSize: androidx.compose.ui.unit.TextUnit = 25.sp,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Column(modifier = Modifier.padding(1.dp)) {
@@ -303,7 +304,7 @@ fun ModifierDialog(
         onDismissRequest = onDismiss,
         title = {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("$itemName ${if (itemPrice != 0.0) "($${String.format("%.2f", itemPrice)})" else ""} Modifiers")
+                Text("$itemName ${if (itemPrice != 0.0) "($${String.format(Locale.US, "%.2f", itemPrice)})" else ""} Modifiers")
                 Button(onClick = onDismiss) { Text("X") }
             }
         },
@@ -347,8 +348,8 @@ fun ModifierDialog(
 
 @Composable
 fun MiscDialog(onDismiss: () -> Unit, onConfirm: (Double) -> Unit) {
-    var value by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf(false) }
+    val vState = remember { mutableStateOf("") }
+    val eState = remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     AlertDialog(
@@ -356,19 +357,28 @@ fun MiscDialog(onDismiss: () -> Unit, onConfirm: (Double) -> Unit) {
         title = { Text("Misc") },
         text = {
             OutlinedTextField(
-                value = value,
-                onValueChange = { if (it.matches(Regex("^\\d*\\.?\\d*$"))) { value = it; error = false } },
+                value = vState.value,
+                onValueChange = { newValue -> 
+                    if (newValue.matches(Regex("^\\d*\\.?\\d*$"))) { 
+                        vState.value = newValue 
+                        eState.value = false 
+                    } 
+                },
                 label = { Text("Custom dollar amount") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                isError = error,
-                supportingText = { if (error) Text("Invalid input") },
+                isError = eState.value,
+                supportingText = { if (eState.value) Text("Invalid input") },
                 modifier = Modifier.focusRequester(focusRequester)
             )
         },
         confirmButton = {
             Button(onClick = {
-                val amount = value.toDoubleOrNull()
-                if (amount != null && amount > 0) onConfirm(amount) else error = true
+                val amount = vState.value.toDoubleOrNull()
+                if (amount != null && amount > 0) {
+                    onConfirm(amount)
+                } else {
+                    eState.value = true
+                }
             }) { Text("OK") }
         },
         dismissButton = { Button(onClick = onDismiss) { Text("Cancel") } }
