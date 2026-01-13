@@ -213,13 +213,13 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(modifier = Modifier.weight(2f)) {
-                MenuButton("Reset", modifier = Modifier.padding(10.dp).width(buttonWidth).aspectRatio(3f)) {
+                MenuButton("RESET", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
                     total = 0.0; addedItems.clear()
                 }
-                MenuButton("DISCOUNTS", modifier = Modifier.padding(10.dp).width(buttonWidth).aspectRatio(3f), isUnderlined = true) {
+                MenuButton("DISCOUNTS", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true, isUnderlined = true) {
                     currentMenu = MenuState.DISCOUNT
                 }
-                MenuButton("MISC", modifier = Modifier.padding(10.dp).width(buttonWidth).aspectRatio(3f)) {
+                MenuButton("MISC", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
                     showMiscModal = true
                 }
             }
@@ -256,18 +256,19 @@ fun MenuButton(
     width: androidx.compose.ui.unit.Dp = 130.dp,
     aspectRatio: Float = 1.5f,
     fontSize: androidx.compose.ui.unit.TextUnit = 25.sp,
+    isFooter: Boolean = false,
     onClick: () -> Unit
 ) {
     Column(modifier = Modifier.padding(1.dp)) {
         Button(
             onClick = onClick,
-            modifier = modifier.width(width).aspectRatio(aspectRatio),
+            modifier = modifier.width(width).aspectRatio(if (isFooter) aspectRatio * 2 else aspectRatio),
             shape = RectangleShape,
             colors = ButtonDefaults.buttonColors(containerColor = color)
         ) {
             Text(
                 text = text,
-                fontSize = if (isUnderlined) 15.sp else fontSize,
+                fontSize = fontSize,
                 textDecoration = if (isUnderlined) TextDecoration.Underline else TextDecoration.None,
                 softWrap = !isUnderlined
             )
@@ -310,21 +311,21 @@ fun ModifierDialog(
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                val anyRefill = options.indices.any { options[it].contains("Refill") && checkedStates[it] }
+                val anyRefill = options.indices.any { options[it].contains("Refill*") && checkedStates[it] }
                 options.forEachIndexed { index, text ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        val isEnabled = !anyRefill || text.contains("Refill")
+                        val isEnabled = !anyRefill || text.contains("Refill*")
                         Checkbox(
                             checked = checkedStates[index],
                             onCheckedChange = { isChecked ->
                                 checkedStates[index] = isChecked
-                                if (isChecked && text.contains("Refill")) {
-                                    options.indices.forEach { if (!options[it].contains("Refill")) checkedStates[it] = false }
+                                if (isChecked && text.contains("Refill*")) {
+                                    options.indices.forEach { if (!options[it].contains("Refill*")) checkedStates[it] = false }
                                 }
                             },
                             enabled = isEnabled
                         )
-                        Text(text, color = if (text.contains("Refill")) Color.Blue else if (isEnabled) Color.Unspecified else Color.Gray)
+                        Text(text, color = if (text.contains("Refill*")) Color.Blue else if (isEnabled) Color.Unspecified else Color.Gray)
                     }
                 }
             }

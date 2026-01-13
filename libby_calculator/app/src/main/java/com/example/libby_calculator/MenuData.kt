@@ -14,7 +14,9 @@ data class ActionButton(
 )
 
 enum class ModifierType {
-    NONE, BASE, EXTRA, NITRO, SHORT, SHRIMP, GRAB_N_GO, FANCY_CROISSANT, SANDWICH, OATMEAL, HOUSE_TEA, BLACK_TEA, HERBAL_TEA, GREEN_TEA, SPEC_TEA, BAGEL
+    NONE, BASE, EXTRA, NITRO, SHORT, SHRIMP, GRAB_N_GO, GRAB_N_GO_FOOD,
+    FANCY_CROISSANT, SANDWICH, OATMEAL, HOUSE_TEA, BLACK_TEA, HERBAL_TEA,
+    GREEN_TEA, SPEC_TEA, BAGEL, BULK_COFFEE, HONEY
 }
 
 object MenuData {
@@ -33,13 +35,13 @@ object MenuData {
         ActionButton("M WM", 5.75, ModifierType.BASE, Color(0xFF6F1C0D)),
         ActionButton("FW", 5.25, ModifierType.SHORT, Color(0xFF6F1C0D)),
         ActionButton("KW", 5.50, ModifierType.BASE, Color(0xFF6F1C0D)),
-        ActionButton("WELL", 20.0, ModifierType.BASE, Color(0xFF126583))
+        ActionButton("WELL", 4.50, ModifierType.BASE, Color(0xFF126583))
     )
     val mainRow4 = listOf(
         ActionButton("ESM", 3.75, ModifierType.SHORT, Color(0xFFF5A724)),
         ActionButton("ESP", 3.25, ModifierType.SHORT, Color(0xFFF5A724)),
         ActionButton("HC", 5.0, ModifierType.SHRIMP, Color(0xFFF5A724)),
-        ActionButton("COLD", 20.0, ModifierType.BASE, Color(0xFF6ABCB8))
+        ActionButton("COLD", 0.0, ModifierType.GRAB_N_GO, Color(0xFF6ABCB8))
     )
     val mainRow5 = listOf(
         ActionButton("TEA", 3.50, ModifierType.BASE, Color(0xFF7DD675)),
@@ -75,25 +77,26 @@ object MenuData {
     val fooRow3 = listOf(
         ActionButton("LOAF", 5.0, isDirectAdd = true, color = Color(0xFF91132F)),
         ActionButton("PAR", 8.25, isDirectAdd = true, color = Color(0xFFF5A724)),
-        ActionButton("G&G", 0.0, ModifierType.GRAB_N_GO, Color(0xFFFB8125)),
-        ActionButton("BALLZ", 4.80, isDirectAdd = true, color = Color(0xFFBC1441))
+        ActionButton("G&G", 0.0, ModifierType.GRAB_N_GO_FOOD, Color(0xFFFB8125)),
+        ActionButton("BALLZ", 6.00, isDirectAdd = true, color = Color(0xFFBC1441))
     )
     val fooRow4 = listOf(
         ActionButton("SAMMI", 0.0, ModifierType.SANDWICH, Color(0xFF0F3D7F)),
         ActionButton("BB", 0.0, ModifierType.BAGEL, Color(0xFF24157A)),
-        ActionButton("EMPAN", 4.80, isDirectAdd = true, color = Color(0xFF2BBDAB)),
+        ActionButton("EMPAN", 8.0, isDirectAdd = true, color = Color(0xFF2BBDAB)),
         ActionButton("OAT", 6.50, ModifierType.OATMEAL, Color(0xFF2BBDAB))
     )
 
     val merRow1 = listOf(
-        ActionButton("T SHI", 12.0, isDirectAdd = true, color = Color(0xFF0E5672)),
-        ActionButton("MUG", 15.3, isDirectAdd = true, color = Color(0xFF48638A))
+        ActionButton("TSHIS", 30.0, isDirectAdd = true, color = Color(0xFF0E5672)),
+        ActionButton("TSHIL", 32.0, isDirectAdd = true, color = Color(0xFF0E5672)),
+        ActionButton("MUG", 19.75, isDirectAdd = true, color = Color(0xFF48638A))
     )
     val merRow2 = listOf(
-        ActionButton("BULK", 20.45, isDirectAdd = true, color = Color(0xFF6F1C0D)),
+        ActionButton("BULK", 0.0, ModifierType.BULK_COFFEE, color = Color(0xFF6F1C0D)),
         ActionButton("BLKT", 0.0, ModifierType.BLACK_TEA, Color(0xFFA70B10)),
         ActionButton("HRBT", 0.0, ModifierType.HERBAL_TEA, Color(0xFF91132F)),
-        ActionButton("HONEY", 103.67, isDirectAdd = true, color = Color(0xFFF5A724))
+        ActionButton("HONEY", 0.0, ModifierType.HONEY, color = Color(0xFFF5A724))
     )
     val merRow3 = listOf(
         ActionButton("SPTEA", 0.0, ModifierType.SPEC_TEA, Color(0xFFBC1441)),
@@ -116,8 +119,8 @@ object MenuData {
             "Heavy Cream +2.00", "Extra Milk +1.00", "Espresso Shot +1.00", "Syrup +1.00", "Honey +1.00"
         ),
         ModifierType.EXTRA to listOf(
-            "Guppy +3.50", "Trout +4.50", "Whaley +5.50", "Guppy Refill +1.75",
-            "Trout Refill +2.25", "Whaley Refill +2.75", "Slow Pour +4.50"
+            "Guppy +3.50", "Trout +4.50", "Whaley +5.50", "Guppy Refill* +1.75",
+            "Trout Refill* +2.25", "Whaley Refill* +2.75", "Slow Pour +4.50"
         ),
         ModifierType.NITRO to listOf("Guppy +0.00", "Trout +1.25", "Whaley +2.50"),
         ModifierType.SHORT to listOf("Guppy +0.00", "Trout +1.00"),
@@ -126,6 +129,10 @@ object MenuData {
             "PH Water +3.25", "Smart Water +5.00", "Perrier +3.25", "Topo-Chico +3.75",
             "CNWater +3.75", "OJ +3.50", "Mama Chia +4.00", "Better Booch +4.25",
             "Synergy Booch +5.25", "CBD +8.25", "Yerba Mate +4.25", "Cup H20 +1.00"
+        ),
+        ModifierType.GRAB_N_GO_FOOD to listOf(
+            "Fruit Jerky +3.50", "HB Eggs +2.50", "Biscotti +1.50", "Banana +1.50",
+            "Chips +2.00", "Popcorn +2.00", "Candy +2.50", "YoPup +4.50"
         ),
         ModifierType.FANCY_CROISSANT to listOf(
             "Chorizo +5.75", "Jalapeno +5.75", "Chocolate +5.75", "Cheddar +5.75",
@@ -160,6 +167,15 @@ object MenuData {
             "Peanut Butter +1.75", "Banana +1.75", "Butter +1.00", "Avocado +2.50",
             "Avo x2 +5.00", "Slice Cheese +1.25", "Salami +2.50", "Mozzarella +2.50",
             "1 Egg +3.00", "2 Egg +5.50", "Tomato +2.25", "Pepper +2.25", "Turkey +2.50", "Everything Seasoning +0.75"
+        ),
+        ModifierType.BULK_COFFEE to listOf(
+            "House/Espresso +19.00", "Black Gold/Vulcan +20.00", "Columbia/Bitches +21.25",
+            "1/2lb Any +10.00", "Iced Coffee Growler +25.00", "Growler Refill +21.00",
+            "Growler Flavor (20p) +4.50", "Nitro Growler +31.00", "Nitro Growler Refill +26.00"
+        ),
+        ModifierType.HONEY to listOf(
+            "Honey Stick +1.00", "Honey Comb +4.50", "Honey Bear (12oz) +18.00",
+            "2 bear bonus (12oz) +28.00", "BB Honey Bear +6.00", "3 BB Bear Bonus +15.00"
         )
     )
 }
