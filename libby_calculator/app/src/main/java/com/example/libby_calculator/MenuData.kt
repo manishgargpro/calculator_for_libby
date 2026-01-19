@@ -105,7 +105,7 @@ object MenuData {
 
     val extraRow1 = listOf(
         ActionButton("$1.00", 1.0, isDirectAdd = true, color = Color(0xFF6ABCB8)),
-        ActionButton("1P", 0.25, isDirectAdd = true, color = Color(0xFF6ABCB8)),
+        ActionButton("1P", 0.50, isDirectAdd = true, color = Color(0xFF6ABCB8)),
     )
 
     val discountRow1 = listOf(
@@ -116,11 +116,11 @@ object MenuData {
     val modifiers = mapOf(
         ModifierType.BASE to listOf(
             "Almond +1.00", "Macadamia +1.00", "Soy +1.00", "Oat +1.00", "Breve +1.00",
-            "Heavy Cream +2.00", "Extra Milk +1.00", "Espresso Shot +1.00", "Syrup +1.00", "Honey +1.00"
+            "Heavy Cream +2.00", "Extra Milk +1.00", "Espresso Shot +1.00", "Double Espresso +2.00", "Syrup +1.00", "Honey +1.00"
         ),
         ModifierType.EXTRA to listOf(
-            "Guppy +3.50", "Trout +4.50", "Whaley +5.50", "Guppy Refill* +1.75",
-            "Trout Refill* +2.25", "Whaley Refill* +2.75", "Slow Pour +4.50"
+            "Guppy +3.50", "Trout +4.50", "Whaley +5.50", "Guppy Refill +1.75",
+            "Trout Refill +2.25", "Whaley Refill +2.75", "Slow Pour +4.50"
         ),
         ModifierType.NITRO to listOf("Guppy +0.00", "Trout +1.25", "Whaley +2.50"),
         ModifierType.SHORT to listOf("Guppy +0.00", "Trout +1.00"),

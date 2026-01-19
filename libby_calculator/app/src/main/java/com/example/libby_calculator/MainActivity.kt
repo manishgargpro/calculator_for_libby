@@ -133,15 +133,19 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                         MenuRow(MenuData.bleRow2, buttonWidth, buttonTextFontSize, ::onActionClick)
                     }
                     MenuState.FOO -> {
-                        BackButton { currentMenu = MenuState.MAIN }
-                        MenuRow(MenuData.fooRow1, buttonWidth, buttonTextFontSize, ::onActionClick)
+                        Row {
+                            BackButton { currentMenu = MenuState.MAIN }
+                            MenuRow(MenuData.fooRow1, buttonWidth, buttonTextFontSize, ::onActionClick)
+                        }
                         MenuRow(MenuData.fooRow2, buttonWidth, buttonTextFontSize, ::onActionClick)
                         MenuRow(MenuData.fooRow3, buttonWidth, buttonTextFontSize, ::onActionClick)
                         MenuRow(MenuData.fooRow4, buttonWidth, buttonTextFontSize, ::onActionClick)
                     }
                     MenuState.MER -> {
-                        BackButton { currentMenu = MenuState.MAIN }
-                        MenuRow(MenuData.merRow1, buttonWidth, buttonTextFontSize, ::onActionClick)
+                        Row {
+                            BackButton { currentMenu = MenuState.MAIN }
+                            MenuRow(MenuData.merRow1, buttonWidth, buttonTextFontSize, ::onActionClick)
+                        }
                         MenuRow(MenuData.merRow2, buttonWidth, buttonTextFontSize, ::onActionClick)
                         MenuRow(MenuData.merRow3, buttonWidth, buttonTextFontSize, ::onActionClick)
                     }
@@ -213,13 +217,13 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(modifier = Modifier.weight(2f)) {
-                MenuButton("RESET", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
+                MenuButton("CHARGE", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
                     total = 0.0; addedItems.clear()
                 }
                 MenuButton("DISCOUNTS", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true, isUnderlined = true) {
                     currentMenu = MenuState.DISCOUNT
                 }
-                MenuButton("MISC", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
+                MenuButton("CUSTOM", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
                     showMiscModal = true
                 }
             }
@@ -268,7 +272,7 @@ fun MenuButton(
         ) {
             Text(
                 text = text,
-                fontSize = fontSize,
+                fontSize = if (isFooter) 15.sp else fontSize,
                 textDecoration = if (isUnderlined) TextDecoration.Underline else TextDecoration.None,
                 softWrap = !isUnderlined
             )
@@ -311,21 +315,15 @@ fun ModifierDialog(
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                val anyRefill = options.indices.any { options[it].contains("Refill*") && checkedStates[it] }
                 options.forEachIndexed { index, text ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        val isEnabled = !anyRefill || text.contains("Refill*")
                         Checkbox(
                             checked = checkedStates[index],
                             onCheckedChange = { isChecked ->
                                 checkedStates[index] = isChecked
-                                if (isChecked && text.contains("Refill*")) {
-                                    options.indices.forEach { if (!options[it].contains("Refill*")) checkedStates[it] = false }
-                                }
                             },
-                            enabled = isEnabled
                         )
-                        Text(text, color = if (text.contains("Refill*")) Color.Blue else if (isEnabled) Color.Unspecified else Color.Gray)
+                        Text(text)
                     }
                 }
             }
