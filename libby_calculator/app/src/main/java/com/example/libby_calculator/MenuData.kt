@@ -84,7 +84,7 @@ object MenuData {
         ActionButton("SAMMI", 0.0, ModifierType.SANDWICH, Color(0xFF0F3D7F)),
         ActionButton("BB", 0.0, ModifierType.BAGEL, Color(0xFF24157A)),
         ActionButton("EMPAN", 8.0, isDirectAdd = true, color = Color(0xFF2BBDAB)),
-        ActionButton("OAT", 6.50, ModifierType.OATMEAL, Color(0xFF2BBDAB))
+        ActionButton("OAT", 0.0, ModifierType.OATMEAL, Color(0xFF2BBDAB))
     )
 
     val merRow1 = listOf(
@@ -143,7 +143,12 @@ object MenuData {
             "Guac This Way +14.25", "Millennial +14.25", "Caff Caprese +14.25",
             "Add Cheese Bagel +1.50", "Add Fancy Croiss +2.75"
         ),
-        ModifierType.OATMEAL to listOf("Add ons +0.75", "Fresh Berries +2.75"),
+        ModifierType.OATMEAL to listOf(
+            "Classic +6.50", "Sassy Fruit +9.25", "Jen +8.00", "Sweet Start +8.75", "Tiramisu +9.00", "Goldenmilk +9.00",
+            "Dried Cranberries +0.75", "Pecans +0.75", "Butter +1.00", "Walnuts +0.75", "Fresh Berries +2.75",
+            "Almonds +0.75", "Golden Milk +1.00", "Chocolate Chips +0.75", "Cocoa Powder +0.75", "Half Banana +0.75",
+            "Esp Shot +1.00", "Peanut Butter +0.75", "Whipped Cream +0.75", "Steamed Milk +0.75", "Extra +0.75",
+        ),
         ModifierType.HOUSE_TEA to listOf(
             "Kermint +4.25", "Good Karma +5.50", "Tea Rex +5.50", "Frankie Goes to Hollywood +6.00",
             "Virgin Chai +5.25", "Aphroditea +5.25", "Auntea Flow +5.25", "To Breathe or Not to Breathe +5.75",
