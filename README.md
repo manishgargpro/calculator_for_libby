@@ -1,3 +1,5 @@
+# This readme is an outdated set of instructions for running the python-based proof-of-concept. The main application has been ported to Android.
+
 # Running Instructions
 * To run this, you need python, which can be downloaded [here](https://www.python.org/).
   * After downloading python, download the python file in this repository and put it in a folder located somewhere easy to access on your computer.
