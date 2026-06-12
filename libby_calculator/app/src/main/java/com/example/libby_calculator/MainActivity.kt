@@ -70,7 +70,7 @@ fun Libby_calculatorApp() {
 }
 
 enum class MenuState {
-    MAIN, EXTRA, DISCOUNT, BLE, FOO, MER
+    MAIN, EXTRA, DISCOUNT, BLE, FOO, MER, GIFT
 }
 
 @Composable
@@ -157,6 +157,9 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                         BackButton { currentMenu = MenuState.MAIN }
                         MenuRow(MenuData.discountRow1, buttonWidth, buttonTextFontSize, ::onActionClick)
                     }
+                    MenuState.GIFT -> {
+                        BackButton { currentMenu = MenuState.MAIN }
+                    }
                 }
             }
 
@@ -217,14 +220,17 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(modifier = Modifier.weight(2f)) {
-                MenuButton("CHARGE", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
+                MenuButton("CHARGE", modifier = Modifier.width(buttonWidth), isFooter = true) {
                     total = 0.0; addedItems.clear()
                 }
-                MenuButton("DISCOUNTS", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true, isUnderlined = true) {
+                MenuButton("DISCOUNTS", modifier = Modifier.width(buttonWidth), isFooter = true, isUnderlined = true) {
                     currentMenu = MenuState.DISCOUNT
                 }
-                MenuButton("CUSTOM", modifier = Modifier.padding(10.dp).width(buttonWidth), isFooter = true) {
+                MenuButton("CUSTOM", modifier = Modifier.width(buttonWidth), isFooter = true) {
                     showMiscModal = true
+                }
+                MenuButton("GIFT CARD", modifier = Modifier.width(buttonWidth), isFooter = true) {
+                    currentMenu = MenuState.GIFT
                 }
             }
             VerticalDivider()
