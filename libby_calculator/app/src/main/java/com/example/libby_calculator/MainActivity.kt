@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -535,21 +536,38 @@ fun NewCustomerModal(
     val name = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
-    val startAmount = remember { mutableStateOf("0.0") }
+    val startAmount = remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
         modifier = Modifier.fillMaxWidth(0.9f),
-        title = { Text("New Customer") },
+        title = {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("New Customer")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = {
+                        name.value = ""
+                        phone.value = ""
+                        email.value = ""
+                        onDismiss()
+                    }) { Text("Cancel") }
+                    val isEnabled = name.value.isNotBlank() && (phone.value.isNotBlank() || email.value.isNotBlank())
+                    Button(
+                        onClick = { onConfirm(name.value, phone.value.ifBlank { null }, email.value.ifBlank { null }, startAmount.value.toDoubleOrNull() ?: 0.0) },
+                        enabled = isEnabled
+                    ) { Text("Add") }
+                }
+            }
+        },
         text = {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
-                    OutlinedTextField(value = name.value, onValueChange = { name.value = it }, label = { Text("Name (Required)") }, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(value = phone.value, onValueChange = { phone.value = it }, label = { Text("Phone Number") }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(value = name.value, onValueChange = { name.value = it }, label = { Text("Name (Required)") }, keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words), modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(value = phone.value, onValueChange = { phone.value = it }, label = { Text("Phone Number") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), modifier = Modifier.fillMaxWidth())
                 }
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -562,25 +580,12 @@ fun NewCustomerModal(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
                     )
-                    OutlinedTextField(value = email.value, onValueChange = { email.value = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(value = email.value, onValueChange = { email.value = it }, label = { Text("Email") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), modifier = Modifier.fillMaxWidth())
                 }
             }
         },
-        confirmButton = {
-            val isEnabled = name.value.isNotBlank() && (phone.value.isNotBlank() || email.value.isNotBlank())
-            Button(
-                onClick = { onConfirm(name.value, phone.value.ifBlank { null }, email.value.ifBlank { null }, startAmount.value.toDoubleOrNull() ?: 0.0) },
-                enabled = isEnabled
-            ) { Text("Add") }
-        },
-        dismissButton = {
-            Button(onClick = {
-                name.value = ""
-                phone.value = ""
-                email.value = ""
-                onDismiss()
-            }) { Text("Cancel") }
-        }
+        confirmButton = {},
+        dismissButton = {}
     )
 }
 
@@ -597,31 +602,47 @@ fun EditCustomerModal(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Customer") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(value = name.value, onValueChange = { name.value = it }, label = { Text("Name") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = phone.value, onValueChange = { phone.value = it }, label = { Text("Phone Number") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = email.value, onValueChange = { email.value = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(
-                    value = startAmount.value,
-                    onValueChange = { if (it.matches(Regex("^\\d*\\.?\\d*$"))) startAmount.value = it },
-                    label = { Text("Starting Balance") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
-                )
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier.fillMaxWidth(0.9f),
+        title = {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("Edit Customer")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onDismiss) { Text("Cancel") }
+                    val isEnabled = name.value.isNotBlank() && (phone.value.isNotBlank() || email.value.isNotBlank())
+                    Button(
+                        onClick = { onConfirm(name.value, phone.value.ifBlank { null }, email.value.ifBlank { null }, startAmount.value.toDoubleOrNull() ?: 0.0) },
+                        enabled = isEnabled
+                    ) { Text("Save") }
+                }
             }
         },
-        confirmButton = {
-            val isEnabled = name.value.isNotBlank() && (phone.value.isNotBlank() || email.value.isNotBlank())
-            Button(
-                onClick = { onConfirm(name.value, phone.value.ifBlank { null }, email.value.ifBlank { null }, startAmount.value.toDoubleOrNull() ?: 0.0) },
-                enabled = isEnabled
-            ) { Text("Save") }
+        text = {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(value = name.value, onValueChange = { name.value = it }, label = { Text("Name (Required)") }, keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words), modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(value = phone.value, onValueChange = { phone.value = it }, label = { Text("Phone Number") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), modifier = Modifier.fillMaxWidth())
+                }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = startAmount.value,
+                        onValueChange = { if (it.matches(Regex("^\\d*\\.?\\d*$"))) startAmount.value = it },
+                        label = { Text("Starting Balance") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(value = email.value, onValueChange = { email.value = it }, label = { Text("Email") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), modifier = Modifier.fillMaxWidth())
+                }
+            }
         },
-        dismissButton = {
-            Button(onClick = onDismiss) { Text("Cancel") }
-        }
+        confirmButton = {},
+        dismissButton = {}
     )
 }
 
