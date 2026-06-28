@@ -111,3 +111,16 @@ Time to add a gift card function in the gift card menu space that has all of the
     inside a transaction history it also functions as a transaction entry append button that uses the current date and timestamp as well as current total
     base functionality remains the same (still clears total but now if in gift card context only after appending a new transaction entry)
   the entire gift card function is completely offline and requires no internet connection whatsoever
+
+[Jun 28 2026]
+check modifiers, many have been changed without my consent
+gift card function:
+  make starting amount and remaining amount text larger
+  test to at least 100 entries to ensure function stability
+  add export functionality that works with g-drive to uploade txt file of current gift card entries
+    this needs confirmation from user
+  add optional note text field for all transactions
+  look into import function
+similar note field for custom button/misc items
+  if in gift card, custom note becomes part of that transaction
+  else, custom note goes in place of "Misc" in items list
