@@ -117,7 +117,7 @@ check modifiers, many have been changed without my consent
 gift card function:
   make starting amount and remaining amount text larger
   test to at least 100 entries to ensure function stability
-  add export functionality that works with g-drive to uploade txt file of current gift card entries
+  add export functionality that works with g-drive to upload txt file of current gift card entries
     this needs confirmation from user
   add optional note text field for all transactions
   look into import function

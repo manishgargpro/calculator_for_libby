@@ -1,6 +1,10 @@
 package com.example.libby_calculator
 
+import android.content.ContentValues
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -55,15 +59,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.libby_calculator.ui.theme.Libby_calculatorTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -262,9 +271,9 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
         if (showMiscModal) {
             MiscDialog(
                 onDismiss = { showMiscModal = false },
-                onConfirm = { amount ->
+                onConfirm = { amount, note ->
                     total += amount
-                    addedItems.add(MenuItem("Misc", amount))
+                    addedItems.add(MenuItem(note.ifBlank { "Misc" }, amount))
                     showMiscModal = false
                 }
             )
@@ -290,7 +299,8 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                         onClick = {
                             if (currentMenu == MenuState.GIFT && selectedCustomerId != null) {
                                 scope.launch {
-                                    dao.insertTransaction(GiftTransaction(customerId = selectedCustomerId!!, amount = total))
+                                    val transactionNote = if (addedItems.size == 1 && addedItems[0].name != "Misc") addedItems[0].name else null
+                                    dao.insertTransaction(GiftTransaction(customerId = selectedCustomerId!!, amount = total, note = transactionNote))
                                     total = 0.0
                                     addedItems.clear()
                                 }
@@ -338,8 +348,10 @@ fun GiftCardListPage(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val customers by dao.searchCustomers(searchQuery).collectAsState(initial = emptyList())
+    val allCustomers by dao.getAllCustomers().collectAsState(initial = emptyList())
     val showNewCustomerModal = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -360,6 +372,52 @@ fun GiftCardListPage(
             )
             Button(onClick = { showNewCustomerModal.value = true }, shape = RectangleShape) {
                 Text("Add New")
+            }
+            Button(onClick = {
+                scope.launch(Dispatchers.IO) {
+                    val dateFmt = SimpleDateFormat("MMM d, yyyy", Locale.US)
+                    val sb = StringBuilder()
+                    sb.appendLine("Gift Card Export - ${SimpleDateFormat("MMM d, yyyy HH:mm", Locale.US).format(Date())}")
+                    sb.appendLine("=".repeat(50))
+                    allCustomers.forEach { item ->
+                        sb.appendLine("Name: ${item.customer.name}")
+                        sb.appendLine("Phone: ${item.customer.phone ?: "N/A"}")
+                        sb.appendLine("Email: ${item.customer.email ?: "N/A"}")
+                        sb.appendLine("Started: $${String.format(Locale.US, "%.2f", item.customer.startingAmount)} on ${dateFmt.format(Date(item.customer.createdAt))}")
+                        sb.appendLine("Remaining: $${String.format(Locale.US, "%.2f", item.remainingAmount)}")
+                        sb.appendLine("-".repeat(30))
+                    }
+                    val fileName = "gift_cards_export.txt"
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val collection = MediaStore.Files.getContentUri("external")
+                        val existing = context.contentResolver.query(
+                            collection,
+                            arrayOf(MediaStore.MediaColumns._ID),
+                            "${MediaStore.MediaColumns.DISPLAY_NAME} = ? AND ${MediaStore.MediaColumns.RELATIVE_PATH} = ?",
+                            arrayOf(fileName, Environment.DIRECTORY_DOCUMENTS + "/"),
+                            null
+                        )
+                        existing?.use { cursor ->
+                            while (cursor.moveToNext()) {
+                                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
+                                context.contentResolver.delete(android.content.ContentUris.withAppendedId(collection, id), null, null)
+                            }
+                        }
+                        val contentValues = ContentValues().apply {
+                            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                            put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
+                            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+                        }
+                        val uri = context.contentResolver.insert(collection, contentValues)
+                        uri?.let { context.contentResolver.openOutputStream(it)?.use { stream -> stream.write(sb.toString().toByteArray()) } }
+                    } else {
+                        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                        dir.mkdirs()
+                        File(dir, fileName).writeText(sb.toString())
+                    }
+                }
+            }, shape = RectangleShape) {
+                Text("Export")
             }
         }
 
@@ -423,9 +481,26 @@ fun TransactionHistoryPage(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
+                val createdDate = SimpleDateFormat("MMM d, yyyy", Locale.US).format(Date(customerWithHistory.customer.createdAt))
+                val startAmt = "$" + String.format(Locale.US, "%.2f", customerWithHistory.customer.startingAmount)
+                val remaining = "$" + String.format(Locale.US, "%.2f", customerWithHistory.remainingAmount)
+                val underline = SpanStyle(textDecoration = TextDecoration.Underline)
                 Text(
-                    "Started With $${String.format(Locale.US, "%.2f", customerWithHistory.customer.startingAmount)}, Now Has $${String.format(Locale.US, "%.2f", customerWithHistory.remainingAmount)}",
-                    fontSize = 12.sp
+                    buildAnnotatedString {
+                        append("Started with ")
+                        withStyle(underline) { append(startAmt) }
+                        append(" on $createdDate")
+                    },
+                    fontSize = 18.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    buildAnnotatedString {
+                        append("Now Has ")
+                        withStyle(underline) { append(remaining) }
+                    },
+                    fontSize = 18.sp,
+                    color = Color.Gray
                 )
             }
             Row {
@@ -447,7 +522,8 @@ fun TransactionHistoryPage(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("$dateStr: $${String.format(Locale.US, "%.2f", transaction.amount)}")
+                    val noteStr = if (!transaction.note.isNullOrBlank()) " (${transaction.note})" else ""
+                    Text("$dateStr: $${String.format(Locale.US, "%.2f", transaction.amount)}$noteStr")
                     Row {
                         IconButton(onClick = { transactionToEdit.value = transaction }) {
                             Icon(Icons.Default.Edit, contentDescription = "Edit Transaction")
@@ -518,9 +594,9 @@ fun TransactionHistoryPage(
         EditTransactionModal(
             transaction = transactionToEdit.value!!,
             onDismiss = { transactionToEdit.value = null },
-            onConfirm = { newAmount ->
+            onConfirm = { newAmount, newNote ->
                 scope.launch {
-                    dao.updateTransaction(transactionToEdit.value!!.copy(amount = newAmount))
+                    dao.updateTransaction(transactionToEdit.value!!.copy(amount = newAmount, note = newNote))
                     transactionToEdit.value = null
                 }
             }
@@ -650,28 +726,43 @@ fun EditCustomerModal(
 fun EditTransactionModal(
     transaction: GiftTransaction,
     onDismiss: () -> Unit,
-    onConfirm: (Double) -> Unit
+    onConfirm: (Double, String?) -> Unit
 ) {
     val amount = remember { mutableStateOf(transaction.amount.toString()) }
+    val note = remember { mutableStateOf(transaction.note ?: "") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Transaction") },
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier.fillMaxWidth(0.9f),
+        title = {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("Edit Transaction")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onDismiss) { Text("Cancel") }
+                    Button(onClick = { onConfirm(amount.value.toDoubleOrNull() ?: 0.0, note.value.ifBlank { null }) }) { Text("Save") }
+                }
+            }
+        },
         text = {
-            OutlinedTextField(
-                value = amount.value,
-                onValueChange = { if (it.matches(Regex("^\\d*\\.?\\d*$"))) amount.value = it },
-                label = { Text("Amount") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = amount.value,
+                    onValueChange = { if (it.matches(Regex("^\\d*\\.?\\d*$"))) amount.value = it },
+                    label = { Text("Amount") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedTextField(
+                    value = note.value,
+                    onValueChange = { note.value = it },
+                    label = { Text("Note (optional)") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
         },
-        confirmButton = {
-            Button(onClick = { onConfirm(amount.value.toDoubleOrNull() ?: 0.0) }) { Text("Save") }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) { Text("Cancel") }
-        }
+        confirmButton = {},
+        dismissButton = {}
     )
 }
 
@@ -789,41 +880,58 @@ fun ModifierDialog(
 }
 
 @Composable
-fun MiscDialog(onDismiss: () -> Unit, onConfirm: (Double) -> Unit) {
+fun MiscDialog(onDismiss: () -> Unit, onConfirm: (Double, String) -> Unit) {
     val vState = remember { mutableStateOf("") }
+    val noteState = remember { mutableStateOf("") }
     val eState = remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Misc") },
-        text = {
-            OutlinedTextField(
-                value = vState.value,
-                onValueChange = { newValue -> 
-                    if (newValue.matches(Regex("^\\d*\\.?\\d*$"))) { 
-                        vState.value = newValue 
-                        eState.value = false 
-                    } 
-                },
-                label = { Text("Custom dollar amount") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                isError = eState.value,
-                supportingText = { if (eState.value) Text("Invalid input") },
-                modifier = Modifier.focusRequester(focusRequester).fillMaxWidth()
-            )
-        },
-        confirmButton = {
-            Button(onClick = {
-                val amount = vState.value.toDoubleOrNull()
-                if (amount != null && amount > 0) {
-                    onConfirm(amount)
-                } else {
-                    eState.value = true
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier.fillMaxWidth(0.9f),
+        title = {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("Misc")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onDismiss) { Text("Cancel") }
+                    Button(onClick = {
+                        val amount = vState.value.toDoubleOrNull()
+                        if (amount != null && amount > 0) {
+                            onConfirm(amount, noteState.value)
+                        } else {
+                            eState.value = true
+                        }
+                    }) { Text("OK") }
                 }
-            }) { Text("OK") }
+            }
         },
-        dismissButton = { Button(onClick = onDismiss) { Text("Cancel") } }
+        text = {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = vState.value,
+                    onValueChange = { newValue ->
+                        if (newValue.matches(Regex("^\\d*\\.?\\d*$"))) {
+                            vState.value = newValue
+                            eState.value = false
+                        }
+                    },
+                    label = { Text("Custom dollar amount") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    isError = eState.value,
+                    supportingText = { if (eState.value) Text("Invalid input") },
+                    modifier = Modifier.focusRequester(focusRequester).weight(1f)
+                )
+                OutlinedTextField(
+                    value = noteState.value,
+                    onValueChange = { noteState.value = it },
+                    label = { Text("Note (optional)") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        },
+        confirmButton = {},
+        dismissButton = {}
     )
     LaunchedEffect(Unit) { delay(100); focusRequester.requestFocus() }
 }

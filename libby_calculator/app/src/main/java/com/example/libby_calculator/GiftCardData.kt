@@ -3,6 +3,8 @@ package com.example.libby_calculator
 import android.content.Context
 import androidx.room.*
 import androidx.room.Index
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "customers")
@@ -11,7 +13,8 @@ data class Customer(
     val name: String,
     val phone: String? = null,
     val email: String? = null,
-    val startingAmount: Double = 0.0
+    val startingAmount: Double = 0.0,
+    val createdAt: Long = System.currentTimeMillis()
 )
 
 @Entity(
@@ -28,7 +31,8 @@ data class GiftTransaction(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val customerId: Int,
     val timestamp: Long = System.currentTimeMillis(),
-    val amount: Double
+    val amount: Double,
+    val note: String? = null
 )
 
 data class CustomerWithTransactions(
@@ -76,7 +80,19 @@ interface GiftCardDao {
     suspend fun deleteTransaction(transaction: GiftTransaction)
 }
 
-@Database(entities = [Customer::class, GiftTransaction::class], version = 1, exportSchema = false)
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE transactions ADD COLUMN note TEXT")
+    }
+}
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE customers ADD COLUMN createdAt INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
+@Database(entities = [Customer::class, GiftTransaction::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun giftCardDao(): GiftCardDao
 
@@ -90,7 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "gift_card_database"
-                ).build()
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
                 INSTANCE = instance
                 instance
             }
