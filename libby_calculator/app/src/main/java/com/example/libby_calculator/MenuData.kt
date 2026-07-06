@@ -14,7 +14,7 @@ data class ActionButton(
 )
 
 enum class ModifierType {
-    NONE, BASE, EXTRA, NITRO, SHORT, SHRIMP, GRAB_N_GO, GRAB_N_GO_FOOD,
+    NONE, BASIC, BASE, EXTRA, NITRO, SHORT, SHRIMP, GRAB_N_GO, GRAB_N_GO_FOOD,
     FANCY_CROISSANT, SANDWICH, OATMEAL, HOUSE_TEA, BLACK_TEA, HERBAL_TEA,
     GREEN_TEA, SPEC_TEA, BAGEL, BULK_COFFEE, HONEY
 }
@@ -23,7 +23,7 @@ object MenuData {
     val mainRow1 = listOf(
         ActionButton("COFFE", 0.0, ModifierType.EXTRA, Color(0xFF0F5FB7)),
         ActionButton("OLE", 4.0, ModifierType.BASE, Color(0xFF0F5FB7)),
-        ActionButton("CB", 5.0, ModifierType.NITRO, Color(0xFF0F5FB7))
+        ActionButton("CB", 5.0, ModifierType.BASE, Color(0xFF0F5FB7))
     )
     val mainRow2 = listOf(
         ActionButton("L CAP", 5.0, ModifierType.BASE, Color(0xFFBB5918)),
@@ -114,7 +114,7 @@ object MenuData {
     )
 
     val modifiers = mapOf(
-        ModifierType.BASE to listOf(
+        ModifierType.BASIC to listOf(
             "Almond +1.00", "Macadamia +1.00", "Soy +1.00", "Oat +1.00", "Breve +1.00",
             "Heavy Cream +2.00", "Extra Milk +1.00", "Espresso Shot +1.00", "Double Espresso +2.00", "Syrup +1.00", "Honey +1.00"
         ),
@@ -122,7 +122,7 @@ object MenuData {
             "Guppy +3.50", "Trout +4.50", "Whaley +5.50", "Guppy Refill +1.75",
             "Trout Refill +2.25", "Whaley Refill +2.75", "Slow Pour +4.50"
         ),
-        ModifierType.NITRO to listOf("Guppy +0.00", "Trout +1.25", "Whaley +2.50"),
+        ModifierType.BASE to listOf("Guppy +0.00", "Trout +1.25", "Whaley +2.50"),
         ModifierType.SHORT to listOf("Guppy +0.00", "Trout +1.00"),
         ModifierType.SHRIMP to listOf("Shrimp -1.00", "Guppy +0.00", "Trout +1.00", "Whaley +2.00"),
         ModifierType.GRAB_N_GO to listOf(

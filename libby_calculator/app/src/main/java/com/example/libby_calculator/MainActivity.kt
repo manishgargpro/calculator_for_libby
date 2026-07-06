@@ -831,8 +831,8 @@ fun ModifierDialog(
     val options = remember(modifierType) {
         val list = mutableListOf<String>()
         MenuData.modifiers[modifierType]?.let { list.addAll(it) }
-        if (modifierType in setOf(ModifierType.BASE, ModifierType.EXTRA, ModifierType.NITRO, ModifierType.SHORT, ModifierType.SHRIMP, ModifierType.BULK_COFFEE, ModifierType.HONEY)) {
-            MenuData.modifiers[ModifierType.BASE]?.let { if (modifierType != ModifierType.BASE) list.addAll(it) }
+        if (modifierType in listOf(ModifierType.BASE, ModifierType.EXTRA, ModifierType.NITRO, ModifierType.SHORT, ModifierType.SHRIMP)) {
+            MenuData.modifiers[ModifierType.BASIC]?.let { if (modifierType != ModifierType.BASIC) list.addAll(it) }
         }
         list.distinct()
     }
