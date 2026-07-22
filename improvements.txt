@@ -124,3 +124,8 @@ gift card function:
 similar note field for custom button/misc items
   if in gift card, custom note becomes part of that transaction
   else, custom note goes in place of "Misc" in items list
+
+[Jul 06 2026]
+add 10% add button
+change section to disc/tax
+make it so custom items become their own transaction

@@ -2,7 +2,7 @@ package com.example.libby_calculator
 
 import androidx.compose.ui.graphics.Color
 
-data class MenuItem(val name: String, val price: Double, val options: List<String> = emptyList())
+data class MenuItem(val name: String, val price: Double, val options: List<String> = emptyList(), val isMisc: Boolean = false)
 
 data class ActionButton(
     val text: String,

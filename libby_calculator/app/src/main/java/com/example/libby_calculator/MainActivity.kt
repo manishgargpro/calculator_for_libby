@@ -209,7 +209,13 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                     MenuState.DISCOUNT -> {
                         Column(modifier = Modifier.verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState())) {
                             BackButton { currentMenu = MenuState.MAIN }
-                            MenuRow(MenuData.discountRow1, buttonWidth, buttonTextFontSize, ::onActionClick)
+                            MenuRow(MenuData.discountRow1, buttonWidth, buttonTextFontSize, ::onActionClick) {
+                                MenuButton("+10%", width = buttonWidth, fontSize = buttonTextFontSize) {
+                                    val taxAmount = total * 0.10
+                                    addedItems.add(MenuItem("TAX", taxAmount))
+                                    total += taxAmount
+                                }
+                            }
                         }
                     }
                     MenuState.GIFT -> {
@@ -273,7 +279,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                 onDismiss = { showMiscModal = false },
                 onConfirm = { amount, note ->
                     total += amount
-                    addedItems.add(MenuItem(note.ifBlank { "Misc" }, amount))
+                    addedItems.add(MenuItem(note.ifBlank { "Misc" }, amount, isMisc = true))
                     showMiscModal = false
                 }
             )
@@ -289,7 +295,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             Row(modifier = Modifier.weight(2f).horizontalScroll(rememberScrollState())) {
                 val isChargeEnabled = if (currentMenu == MenuState.GIFT) {
                     selectedCustomerId != null && total > 0 && 
-                    (selectedCustomerWithHistory?.let { total <= it.remainingAmount } ?: false)
+                    (selectedCustomerWithHistory?.let { total <= it.remainingAmount + 0.005 } ?: false)
                 } else {
                     total > 0
                 }
@@ -299,8 +305,27 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                         onClick = {
                             if (currentMenu == MenuState.GIFT && selectedCustomerId != null) {
                                 scope.launch {
-                                    val transactionNote = if (addedItems.size == 1 && addedItems[0].name != "Misc") addedItems[0].name else null
-                                    dao.insertTransaction(GiftTransaction(customerId = selectedCustomerId!!, amount = total, note = transactionNote))
+                                    val miscItems = addedItems.filter { it.isMisc }
+                                    val otherItems = addedItems.filter { !it.isMisc }
+
+                                    for (misc in miscItems) {
+                                        dao.insertTransaction(
+                                            GiftTransaction(
+                                                customerId = selectedCustomerId!!,
+                                                amount = misc.price,
+                                                note = if (misc.name != "Misc") misc.name else null
+                                            )
+                                        )
+                                    }
+
+                                    if (otherItems.isNotEmpty()) {
+                                        val otherTotal = otherItems.sumOf { it.price }
+                                        val otherNote = if (otherItems.size == 1) otherItems[0].name else null
+                                        dao.insertTransaction(
+                                            GiftTransaction(customerId = selectedCustomerId!!, amount = otherTotal, note = otherNote)
+                                        )
+                                    }
+
                                     total = 0.0
                                     addedItems.clear()
                                 }
@@ -317,7 +342,7 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                     }
                 }
 
-                MenuButton("DISCOUNTS", modifier = Modifier.width(buttonWidth), isFooter = true, isUnderlined = true) {
+                MenuButton("TAX/DISC", modifier = Modifier.width(buttonWidth), isFooter = true, isUnderlined = true) {
                     currentMenu = MenuState.DISCOUNT
                 }
                 MenuButton("CUSTOM", modifier = Modifier.width(buttonWidth), isFooter = true) {
